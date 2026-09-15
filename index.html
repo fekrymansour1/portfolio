@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Fekry Mansour — Computer Engineer</title>
+<meta name="description" content="Fekry Nabil Mohamed Mansour — Computer Engineer focused on AI agents, automation, and embedded systems." />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- ===== Nav ===== -->
+  <header class="nav" id="nav">
+    <div class="nav-inner">
+      <a href="#top" class="nav-name">
+        <img src="images/profile.jpg" alt="" class="nav-avatar" />
+        Fekry Mansour
+      </a>
+      <nav class="nav-links">
+        <a href="#work">Work</a>
+        <a href="#projects">Projects</a>
+        <a href="#skills">Skills</a>
+        <a href="#certifications">Certifications</a>
+        <a href="#contact">Contact</a>
+      </nav>
+      <button class="nav-ask" id="navAskBtn" type="button">Ask about me</button>
+    </div>
+  </header>
+
+  <main id="top">
+
+    <!-- ===== Hero ===== -->
+    <section class="hero">
+      <div class="hero-inner">
+        <img src="images/profile.jpg" alt="Portrait of Fekry Mansour" class="hero-photo" />
+        <p class="hero-eyebrow">Doha, Qatar</p>
+        <h1 class="hero-title">Fekry Mansour builds things that learn, automate, and teach.</h1>
+        <p class="hero-sub">Computer Engineer from Qatar University, working across AI agents, workflow automation, and embedded systems.</p>
+        <div class="hero-actions">
+          <a href="#projects" class="btn btn-primary">See the work</a>
+          <a href="#" class="btn btn-secondary" id="heroAskLink">Ask my assistant</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Summary strip ===== -->
+    <section class="summary-strip">
+      <p id="summaryText">Loading summary…</p>
+    </section>
+
+    <!-- ===== Work experience ===== -->
+    <section class="section" id="work">
+      <div class="section-inner">
+        <h2 class="section-title">Work experience</h2>
+        <div class="timeline" id="workTimeline"></div>
+      </div>
+    </section>
+
+    <!-- ===== Education ===== -->
+    <section class="section section-alt" id="education">
+      <div class="section-inner">
+        <h2 class="section-title">Education</h2>
+        <div id="educationList"></div>
+      </div>
+    </section>
+
+    <!-- ===== Projects ===== -->
+    <section class="section" id="projects">
+      <div class="section-inner">
+        <h2 class="section-title">Projects</h2>
+        <div class="project-grid" id="projectGrid"></div>
+      </div>
+    </section>
+
+    <!-- ===== Skills ===== -->
+    <section class="section section-alt" id="skills">
+      <div class="section-inner">
+        <h2 class="section-title">Skills</h2>
+        <div class="skills-grid" id="skillsGrid"></div>
+      </div>
+    </section>
+
+    <!-- ===== Certifications ===== -->
+    <section class="section" id="certifications">
+      <div class="section-inner">
+        <h2 class="section-title">Certifications</h2>
+        <ul class="cert-list" id="certList"></ul>
+      </div>
+    </section>
+
+    <!-- ===== Contact ===== -->
+    <section class="section contact-section" id="contact">
+      <div class="section-inner contact-inner">
+        <h2 class="section-title">Get in touch</h2>
+        <div class="contact-links" id="contactLinks"></div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <p>Built by Fekry Mansour.</p>
+  </footer>
+
+  <!-- ===== Chatbot ===== -->
+  <div class="chat-launcher" id="chatLauncher" aria-label="Open chat" role="button" tabindex="0">
+    <span class="chat-launcher-icon">💬</span>
+  </div>
+
+  <div class="chat-panel" id="chatPanel" aria-hidden="true">
+    <div class="chat-header">
+      <div class="chat-header-title">
+        <span class="chat-dot"></span>
+        Ask about Fekry
+      </div>
+      <button class="chat-close" id="chatCloseBtn" aria-label="Close chat">✕</button>
+    </div>
+    <div class="chat-messages" id="chatMessages">
+      <div class="chat-msg chat-msg-bot">
+        Hi, I'm an assistant that only knows what's on Fekry's CV. Ask me about his experience, skills, projects, or education.
+      </div>
+    </div>
+    <div class="chat-input-row">
+      <input type="text" id="chatInput" class="chat-input" placeholder="Ask a question…" autocomplete="off" />
+      <button id="chatSendBtn" class="chat-send" type="button">Send</button>
+    </div>
+    <p class="chat-footnote">Answers only from Fekry's CV — not a general-purpose chatbot.</p>
+  </div>
+
+  <script src="cv-data.js"></script>
+  <script src="chatbot.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
