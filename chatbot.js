@@ -33,15 +33,38 @@ const BLOCKED_PATTERNS = [
   /ignore\s+(all\s+)?previous\s+instructions?/i,
   /disregard\s+(all\s+)?previous\s+instructions?/i,
   /forget\s+(all\s+)?previous\s+instructions?/i,
+  /\bdeveloper\s+mode\b[\s\S]{0,120}\b(system|developer|prompt|instruction)/i,
   /reveal\s+(your\s+)?(system|developer)\s+(prompt|message|instructions?)/i,
   /show\s+(me\s+)?(your\s+)?(system|developer)\s+(prompt|message|instructions?)/i,
   /what\s+is\s+your\s+(system\s+prompt|hidden\s+prompt)/i,
   /print\s+(the\s+)?(system|developer)\s+(prompt|message|instructions?)/i,
-  /\b(reveal|show|print|quote|repeat)\b[\s\S]{0,80}\b(prompt|instructions?|developer\s+message|system\s+message)\b/i,
+  /\b(reveal|show|print|quote|repeat|output)\b[\s\S]{0,100}\b(prompt|instructions?|developer\s+message|system\s+message)\b/i,
   /jailbreak/i,
   /bypass\s+(your\s+)?(rules|guardrails|instructions?)/i,
   /act\s+as\s+(a\s+)?different\s+assistant/i,
   /pretend\s+you\s+are\s+another/i
+];
+
+/*
+ * Generic requests for code/programming help are outside the CV scope.
+ * Keep this check ahead of recent-portfolio context so a previous CV
+ * question cannot accidentally authorize a generic coding task.
+ */
+const GENERIC_CODE_REQUEST_PATTERNS = [
+  /\b(write|create|generate|make|build|provide|develop)\b[\s\S]{0,120}\b(code|script|program|function|algorithm)\b/i,
+  /\b(code|script|program|function)\b[\s\S]{0,80}\b(for|to|that)\b[\s\S]{0,120}\b(python|javascript|java|c\+\+|bash|fibonacci|calculator|web\s+scraper)\b/i,
+  /\bhow\s+do\s+i\b[\s\S]{0,120}\b(code|program|script|python|javascript|java|bash)\b/i,
+  /\b(debug|fix|refactor|optimize)\b[\s\S]{0,120}\b(code|script|program|function)\b/i,
+  /\bwrite\s+a\s+python\s+script\b/i,
+  /\bpython\s+script\s+to\b/i
+];
+
+const GENERIC_OFF_TOPIC_PATTERNS = [
+  /\brecipe|recipes|baking|cook(ing)?|chocolate\s+chip\s+cookies?\b/i,
+  /\bweather|forecast|temperature\b/i,
+  /\bnews|headlines|current\s+events\b/i,
+  /\bsports?|football|soccer|basketball|tennis\b/i,
+  /\bpolitic(s|al)?|election|president|prime\s+minister\b/i
 ];
 
 const SENSITIVE_PATTERNS = [
@@ -341,8 +364,30 @@ function isSensitiveRequest(text) {
   return SENSITIVE_PATTERNS.some((pattern) => pattern.test(text));
 }
 
+function isGenericCodeRequest(text) {
+  return GENERIC_CODE_REQUEST_PATTERNS.some((pattern) => pattern.test(text));
+}
+
+function isGenericOffTopicRequest(text) {
+  return GENERIC_OFF_TOPIC_PATTERNS.some((pattern) => pattern.test(text));
+}
+
 function hasPortfolioTerms(text) {
   return PORTFOLIO_TERMS.some((pattern) => pattern.test(text));
+}
+
+function hasDirectPortfolioReference(text) {
+  return [
+    /\bfekry\b/i,
+    /\bhis\b/i,
+    /\bher\b/i,
+    /\bhim\b/i,
+    /\bthe\s+(candidate|student|engineer|assistant)\b/i,
+    /\bcv\b/i,
+    /\bresume\b/i,
+    /\bportfolio\b/i,
+    /\bprofessional\s+(profile|background)\b/i
+  ].some((pattern) => pattern.test(text));
 }
 
 function hasRecentPortfolioContext() {
@@ -366,23 +411,41 @@ function getLocalGuardrailResponse(text) {
 
   const normalized = text.toLowerCase();
 
-  if (/\b(phone|telephone|mobile)\b/.test(normalized) && /\b(number|contact|reach|call)\b/.test(normalized)) {
-    return `Fekry's public phone number is ${CV_DATA.phone}.`;
+  // Public contact information is intentionally answered locally. This keeps
+  // provider filtering from blocking legitimate portfolio contact questions.
+  const asksPhone = /\b(phone|telephone|mobile|call|contact\s+number)\b/.test(normalized);
+  const asksEmail = /\b(email|e-mail|mail|direct\s+email)\b/.test(normalized);
+  const asksLinkedIn = /\blinkedin\b/.test(normalized);
+  const asksGitHub = /\bgithub\b/.test(normalized);
+  const asksAllContact = /\b(contact|reach)\b/.test(normalized) && !/\b(contact\s+number)\b/.test(normalized);
+
+  const contactLines = [];
+  if (asksAllContact || asksPhone) contactLines.push(`Phone: ${CV_DATA.phone}`);
+  if (asksAllContact || asksEmail) contactLines.push(`Email: ${CV_DATA.email}`);
+  if (asksLinkedIn) contactLines.push(`LinkedIn: ${CV_DATA.linkedin}`);
+  if (asksGitHub) contactLines.push(`GitHub: ${CV_DATA.github}`);
+  if (contactLines.length) {
+    return `Fekry's public contact information:\n${contactLines.join("\n")}`;
   }
 
-  if (/\b(email|e-mail|mail)\b/.test(normalized) && /\b(address|contact|reach|send)\b/.test(normalized)) {
-    return `Fekry's public email is ${CV_DATA.email}.`;
+  // These are explicit non-CV requests and must be blocked even when an
+  // earlier conversation turn was about Fekry.
+  if (isGenericCodeRequest(text) || isGenericOffTopicRequest(text)) {
+    return "I can answer questions about Fekry's public professional profile, but I can't help with unrelated general-purpose requests.";
   }
 
-  if (/\blinkedin\b/.test(normalized)) {
-    return `Fekry's LinkedIn profile is ${CV_DATA.linkedin}`;
-  }
+  const hasContext = hasRecentPortfolioContext();
+  const hasDirectReference = hasDirectPortfolioReference(text);
+  const hasKnownPortfolioTerm = hasPortfolioTerms(text);
 
-  if (/\bgithub\b/.test(normalized)) {
-    return `Fekry's GitHub profile is ${CV_DATA.github}`;
-  }
+  // Ambiguous skill/tool names such as "Python" are not enough by themselves
+  // to authorize a generic question. Require a direct profile reference, a
+  // clear recent CV context, or another strong portfolio-specific signal.
+  const clearlyOutsideScope =
+    !hasDirectReference &&
+    !hasContext &&
+    !hasKnownPortfolioTerm;
 
-  const clearlyOutsideScope = !hasPortfolioTerms(text) && !hasRecentPortfolioContext();
   if (clearlyOutsideScope) {
     return "I can't answer that from the CV information available to me. Feel free to ask about Fekry's skills, projects, education, experience, certifications, or public contact information.";
   }

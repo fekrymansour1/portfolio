@@ -19,9 +19,10 @@ The Cloudflare Worker is responsible for holding the provider secret and forward
 
 The browser also applies local guardrails for:
 - prompt-injection attempts and requests for hidden/system instructions;
+- generic coding/programming requests that are unrelated to Fekry's CV;
+- clearly unrelated general-purpose topics (for example recipes or other non-CV requests);
 - private/confidential data requests such as bank details, home address information, passwords, API keys, and private keys;
-- clearly unrelated questions outside the public CV scope;
-- public contact questions that can be answered directly from the CV, which avoids unnecessary model/provider filtering for the public phone number and email.
+- public contact questions that can be answered directly from the CV, including combined phone/email/link requests, which avoids unnecessary model/provider filtering for public contact details.
 
 For real security, the Worker should enforce the same scope and sensitive-data rules server-side. Client-side JavaScript can be inspected by visitors, so the Worker must remain the final enforcement layer.
 
