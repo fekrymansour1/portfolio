@@ -1,3 +1,7 @@
-FEKRY portfolio v30
+# Fekry Mansour — Portfolio
 
-Fixes the CamelCode experience logo issue by removing the stray "CC" fallback text and keeping the CamelCode logo as an image. The image is sourced from the CamelCode site logo URL confirmed by current web results.
+This repository contains the source files for my personal portfolio website, live at:
+**https://fekrymansour1.github.io/portfolio/**
+
+## About
+A responsive personal portfolio site showcasing my work, skills, and certifications, with an integrated AI assistant to help visitors learn more.
