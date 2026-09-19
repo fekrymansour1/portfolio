@@ -1,5 +1,3 @@
-# Fekry Portfolio v26
+FEKRY portfolio v30
 
-Updated the Skills marquee with the latest uploaded logos and organized the visible skills by relationship: AI / LLM, automation / development, networking, and embedded systems. Logo assets are normalized for consistent positioning and sizing, and the existing responsive marquee behavior remains intact.
-
-Latest added logo skills: Arduino, Cisco Packet Tracer, Ollama, and Raspberry Pi.
+Fixes the CamelCode experience logo issue by removing the stray "CC" fallback text and keeping the CamelCode logo as an image. The image is sourced from the CamelCode site logo URL confirmed by current web results.

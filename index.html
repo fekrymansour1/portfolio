@@ -82,6 +82,7 @@
       100%{transform:translateY(0)}
     }
     .nav-inner{
+      position:relative;
       width:min(var(--max),calc(100% - 48px));
       min-height:76px;
       margin:0 auto;
@@ -96,6 +97,7 @@
       letter-spacing:-.065em;
       position:relative;
       white-space:nowrap;
+      z-index:4;
     }
     .brand::after{
       content:"";
@@ -109,12 +111,16 @@
       transition:.3s ease;
     }
     .brand:hover::after{width:100%}
+
     .nav-links{
+      position:relative;
+      z-index:4;
       display:flex;
       align-items:center;
       gap:26px;
       overflow:auto;
       scrollbar-width:none;
+      padding:4px 2px 9px;
     }
     .nav-links::-webkit-scrollbar{display:none}
     .nav-links a{
@@ -122,27 +128,28 @@
       font-size:13px;
       white-space:nowrap;
       position:relative;
-      padding:4px 0;
-      transition:.2s ease;
+      padding:4px 3px 3px;
+      transition:color .22s ease,transform .22s ease;
     }
+    .nav-links a:hover{color:var(--ink)}
     .nav-links a::after{
       content:"";
       position:absolute;
-      left:0;
+      left:3px;
+      right:3px;
       bottom:-7px;
-      width:18px;
-      height:3px;
+      height:2.5px;
       border-radius:99px;
-      background:linear-gradient(90deg,var(--blue),var(--pink));
-      transform-origin:left center;
-      transition:width .3s cubic-bezier(.2,.7,.2,1),opacity .2s ease;
+      background:linear-gradient(90deg,var(--blue),var(--purple),var(--pink));
+      transform:scaleX(0);
+      transform-origin:center;
+      opacity:0;
+      transition:transform .3s cubic-bezier(.2,.7,.2,1),opacity .22s ease;
+      pointer-events:none;
     }
-    .nav-links a:hover,
-    .nav-links a.active{color:var(--ink)}
-    .nav-links a:hover::after,
-    .nav-links a.active::after{width:100%}
-    .nav-links a.active{
-      animation:activeNavLink .45s cubic-bezier(.2,.7,.2,1);
+    .nav-links a.active::after{
+      transform:scaleX(1);
+      opacity:1;
     }
     .nav-links a:focus-visible{
       outline:2px solid rgba(54,88,255,.28);
@@ -150,28 +157,64 @@
       border-radius:4px;
     }
 
-    /* About is the entry point to Fekry Intelligence. */
-    .nav-links a.about-link,
-    .nav-links a.about-link:hover,
-    .nav-links a.about-link.active{
-      background:linear-gradient(90deg,#ec4899 0%,#a855f7 25%,#3b82f6 50%,#a855f7 75%,#ec4899 100%);
-      background-size:300% 100%;
-      background-position:0% 50%;
-      -webkit-background-clip:text;
-      background-clip:text;
-      -webkit-text-fill-color:transparent;
-      color:transparent;
-      animation:aboutNavGradient 2.8s linear infinite;
-      will-change:background-position;
+    .nav-toggle{
+      display:none;
+      width:44px;
+      height:44px;
+      border:1px solid rgba(17,17,17,.12);
+      border-radius:14px;
+      background:rgba(255,253,248,.76);
+      color:var(--ink);
+      padding:0;
+      cursor:pointer;
+      position:relative;
+      z-index:5;
+      place-items:center;
+      transition:transform .2s ease,background .25s ease,border-color .25s ease,box-shadow .25s ease;
     }
-    @keyframes aboutNavGradient{
-      0%{background-position:0% 50%}
-      100%{background-position:300% 50%}
+    .nav-toggle:hover{
+      transform:translateY(-1px);
+      background:#fffdf8;
+      border-color:rgba(17,17,17,.18);
+      box-shadow:0 8px 20px rgba(17,17,17,.06);
     }
-    @keyframes activeNavLink{
-      0%{transform:translateY(4px);opacity:.55}
-      65%{transform:translateY(-1px);opacity:1}
-      100%{transform:none}
+    .nav-toggle span{
+      position:absolute;
+      width:18px;
+      height:2px;
+      border-radius:99px;
+      background:currentColor;
+      transition:transform .28s cubic-bezier(.2,.7,.2,1),opacity .2s ease;
+    }
+    .nav-toggle span:nth-child(1){transform:translateY(-6px)}
+    .nav-toggle span:nth-child(3){transform:translateY(6px)}
+    .nav.menu-open .nav-toggle span:nth-child(1){transform:rotate(45deg)}
+    .nav.menu-open .nav-toggle span:nth-child(2){opacity:0}
+    .nav.menu-open .nav-toggle span:nth-child(3){transform:rotate(-45deg)}
+
+    .nav-scrim{display:none}
+
+    .scroll-progress{
+      position:absolute;
+      left:0;
+      right:0;
+      bottom:-2px;
+      height:3px;
+      overflow:hidden;
+      background:rgba(17,17,17,.055);
+      pointer-events:none;
+      z-index:6;
+    }
+    .scroll-progress-bar{
+      display:block;
+      width:100%;
+      height:100%;
+      transform:scaleX(0);
+      transform-origin:left center;
+      background:linear-gradient(90deg,var(--blue) 0%,var(--purple) 52%,var(--pink) 100%);
+      box-shadow:0 0 12px rgba(139,98,255,.22);
+      will-change:transform;
+      transition:transform .08s linear;
     }
 
     /* Hero */
@@ -566,15 +609,14 @@
       border-color:rgba(54,88,255,.25);
     }
     .timeline-brand img{
+      display:block;
       width:100%;
       height:100%;
+      max-height:128px;
       object-fit:contain;
       position:relative;
       z-index:1;
     }
-    .timeline-fallback{display:none;font-weight:900;font-size:34px;letter-spacing:-.06em}
-    .timeline-brand img.is-broken{display:none}
-    .timeline-brand img.is-broken + .timeline-fallback{display:block}
     .timeline-title{
       margin:2px 0 8px;
       font-size:32px;
@@ -1103,14 +1145,34 @@
     }
     .chat-send{
       width:48px;
+      min-width:48px;
       border:0;
+      border-radius:15px;
       background:linear-gradient(135deg,var(--blue),var(--purple));
       color:#fff;
       cursor:pointer;
-      transition:.2s ease;
+      display:grid;
+      place-items:center;
+      box-shadow:0 8px 20px rgba(54,88,255,.18);
+      transition:transform .2s cubic-bezier(.2,.7,.2,1),background .25s ease,box-shadow .25s ease;
     }
-    .chat-send:hover{transform:translateY(-2px)}
-    .chat-send:disabled,.primary-btn:disabled{opacity:.45;cursor:not-allowed}
+    .chat-send svg{width:19px;height:19px;transition:transform .2s cubic-bezier(.2,.7,.2,1)}
+    .chat-send:hover{
+      transform:translateY(-2px) scale(1.025);
+      background:linear-gradient(135deg,var(--blue),var(--purple),var(--pink));
+      box-shadow:0 12px 26px rgba(139,98,255,.28),0 0 0 4px rgba(239,79,154,.07);
+    }
+    .chat-send:hover svg{transform:translateY(-1px)}
+    .chat-send:active{transform:translateY(1px) scale(.97);box-shadow:0 6px 14px rgba(54,88,255,.18)}
+    .chat-send:focus-visible{outline:2px solid rgba(54,88,255,.28);outline-offset:3px}
+    .chat-send:disabled,.primary-btn:disabled{opacity:.45;cursor:not-allowed;box-shadow:none}
+    .chat-send.is-pulsing{animation:chatSendPulse .34s cubic-bezier(.2,.7,.2,1)}
+    @keyframes chatSendPulse{
+      0%{transform:translateY(0) scale(1)}
+      45%{transform:translateY(-2px) scale(1.045)}
+      100%{transform:translateY(0) scale(1)}
+    }
+    .chat-send:disabled svg{transform:none}
     .chat-note{
       padding:8px 12px 10px;
       font-size:10px;
@@ -1335,9 +1397,9 @@
     }
     @media (prefers-reduced-motion:reduce){
       .intelligence-title{animation:none;background-position:50% 50%}
-      .nav-links a.about-link{animation:none;background-position:50% 50%}
       .assistant-chip,.assistant-submit,.assistant-input,.assistant-output-wrap,.assistant-prompts{transition:none}
       .assistant-message.typing::after{animation:none}
+      .chat-send,.chat-send svg{transition:none}
     }
 
 
@@ -1427,12 +1489,560 @@
       .chat-panel{right:14px;bottom:82px;width:calc(100vw - 28px)}
       footer{align-items:flex-start;flex-direction:column}
     }
+
+    /* Mobile refinement: keep the same desktop system, but give phones a clearer navigation and tighter rhythm. */
+    @media (max-width:700px){
+      html{scroll-padding-top:0}
+
+      .nav{
+        padding-top:max(0px, env(safe-area-inset-top));
+      }
+      .nav-inner{
+        width:calc(100% - 28px);
+        min-height:0;
+        padding:10px 0 9px;
+        align-items:center;
+        gap:16px;
+      }
+      .brand{
+        flex:0 0 auto;
+        font-size:17px;
+      }
+      .nav-toggle{display:grid}
+      .nav-links{
+        position:absolute;
+        top:calc(100% + 10px);
+        left:0;
+        right:0;
+        display:grid;
+        grid-template-columns:1fr;
+        gap:2px;
+        width:auto;
+        max-width:none;
+        max-height:min(72svh,540px);
+        overflow:auto;
+        padding:10px;
+        background:rgba(255,253,248,.97);
+        border:1px solid rgba(17,17,17,.10);
+        border-radius:20px;
+        box-shadow:0 24px 60px rgba(17,17,17,.12);
+        opacity:0;
+        visibility:hidden;
+        pointer-events:none;
+        transform:translateY(-10px) scale(.985);
+        transform-origin:top center;
+        transition:opacity .24s ease,transform .28s cubic-bezier(.2,.7,.2,1),visibility .24s ease;
+      }
+      .nav.menu-open .nav-links{
+        opacity:1;
+        visibility:visible;
+        pointer-events:auto;
+        transform:none;
+      }
+      .nav-links a{
+        font-size:15px;
+        padding:13px 12px 15px;
+        border-radius:12px;
+      }
+      .nav-links a:hover{background:rgba(17,17,17,.035)}
+      .nav-links a::after{
+        left:12px;
+        right:auto;
+        bottom:7px;
+        width:38px;
+        height:2.5px;
+        transform-origin:left center;
+      }
+      .nav-scrim{
+        display:block;
+        position:absolute;
+        left:0;
+        right:0;
+        top:100%;
+        height:100vh;
+        background:rgba(17,17,17,.10);
+        backdrop-filter:blur(2px);
+        opacity:0;
+        visibility:hidden;
+        pointer-events:none;
+        transition:opacity .24s ease,visibility .24s ease;
+        z-index:1;
+      }
+      .nav.menu-open .nav-scrim{
+        opacity:1;
+        visibility:visible;
+        pointer-events:auto;
+      }
+      body.nav-menu-open{overflow:hidden}
+
+      .hero{
+        min-height:auto;
+        padding:136px 0 72px;
+      }
+      .hero-grid{
+        grid-template-columns:1fr;
+        gap:34px;
+        align-items:start;
+      }
+      h1{
+        font-size:clamp(54px,15vw,82px);
+        line-height:.86;
+      }
+      .hero-role{
+        margin-top:22px;
+        font-size:clamp(24px,7.4vw,34px);
+        line-height:1.02;
+      }
+      .hero-copy{
+        margin-top:18px;
+        font-size:16px;
+        line-height:1.42;
+      }
+      .hero-facts{
+        gap:8px;
+        margin-top:21px;
+      }
+      .fact{
+        min-height:39px;
+        padding:8px 12px;
+        font-size:12px;
+      }
+      .hero-links{
+        gap:8px;
+        margin-top:13px;
+      }
+      .portrait-wrap{display:none!important}
+      .hero-link{
+        min-height:46px;
+        padding:9px 12px;
+        font-size:12px;
+      }
+      .portrait-wrap{
+        justify-self:center;
+        width:min(290px,82vw);
+        margin-top:4px;
+      }
+      .portrait-wrap::before{
+        inset:-10px 18px 18px -10px;
+      }
+      .portrait-wrap::after{
+        inset:14px -14px -14px 14px;
+      }
+      .portrait-tag{
+        left:-2px;
+        bottom:-10px;
+        padding:9px 12px;
+        font-size:10px;
+        box-shadow:7px 7px 0 var(--yellow);
+      }
+
+      .section{
+        scroll-margin-top:112px;
+        padding:76px 0;
+      }
+      .section-heading{
+        margin-bottom:34px;
+      }
+      .section-title{
+        font-size:clamp(50px,14vw,76px);
+        line-height:.84;
+      }
+
+      .work-grid{
+        grid-template-columns:1fr;
+        grid-auto-rows:auto;
+        gap:16px;
+      }
+      .work-card{
+        min-height:0;
+        padding:22px;
+        border-radius:20px;
+      }
+      .work-title{
+        margin:5px 0 11px;
+        font-size:clamp(27px,7.4vw,34px);
+        line-height:.99;
+      }
+      .work-copy{
+        font-size:15.5px;
+        line-height:1.5;
+      }
+      .work-side{
+        padding-top:20px;
+      }
+      .pill{
+        padding:6px 9px;
+        font-size:10px;
+      }
+
+      .timeline-item{
+        gap:18px;
+        padding:28px 0;
+      }
+      .timeline-brand{
+        width:min(100%,280px);
+        min-height:150px;
+        padding:16px;
+      }
+      .timeline-title{
+        font-size:28px;
+        line-height:1.02;
+      }
+      .timeline-org{
+        margin-bottom:11px;
+        font-size:13px;
+        line-height:1.35;
+      }
+      .timeline-list{
+        padding-left:18px;
+        font-size:15px;
+        line-height:1.5;
+      }
+      .timeline-list li+li{margin-top:7px}
+
+      .education{
+        gap:12px;
+      }
+      .edu-card{
+        min-height:255px;
+        padding:26px 24px;
+      }
+      .edu-title{
+        margin:50px 0 16px;
+        font-size:clamp(29px,8vw,40px);
+      }
+      .edu-meta{
+        font-size:14px;
+      }
+
+      .skills-marquee{
+        margin-bottom:28px;
+      }
+      .skill-marquee-item{
+        width:126px;
+        flex-basis:126px;
+        padding:7px 9px;
+      }
+      .skill-marquee-icon{
+        width:54px;
+        height:54px;
+        border-radius:14px;
+      }
+      .skill-marquee-icon img{
+        width:43px;
+        height:43px;
+      }
+      .skill-marquee-name{
+        font-size:11px;
+      }
+      .skills{
+        grid-template-columns:1fr;
+      }
+      .skill{
+        min-height:auto;
+        padding:23px;
+      }
+      .skill strong{
+        font-size:19px;
+      }
+      .skill span{
+        font-size:14px;
+        line-height:1.5;
+      }
+
+      .certs{
+        grid-template-columns:1fr;
+        gap:10px;
+      }
+      .cert{
+        min-height:84px;
+        padding:16px 18px;
+        gap:13px;
+      }
+      .cert-title{
+        font-size:14px;
+        line-height:1.35;
+      }
+
+      .intelligence-main{
+        padding:48px 10px 44px;
+      }
+      .intelligence-title{
+        max-width:100%;
+        font-size:clamp(38px,11vw,52px);
+        line-height:1.06;
+      }
+      .intelligence-subtitle{
+        margin-top:12px;
+        font-size:clamp(23px,7vw,32px);
+      }
+      .assistant-prompts{
+        gap:8px;
+        margin-top:22px;
+      }
+      .assistant-chip{
+        max-width:100%;
+        padding:9px 13px;
+        font-size:12px;
+      }
+      .assistant-compose{
+        width:100%;
+        grid-template-columns:minmax(0,1fr) 46px;
+        gap:7px;
+        margin-top:20px;
+      }
+      .assistant-input{
+        height:48px;
+        font-size:14px;
+        padding:0 15px;
+      }
+      .assistant-submit{
+        width:46px;
+        min-width:46px;
+        height:46px;
+      }
+
+      .contact{padding-bottom:82px}
+      .contact-box{
+        padding:34px 24px;
+        gap:30px;
+      }
+      .contact-title{
+        font-size:clamp(52px,15vw,78px);
+      }
+      .contact-copy{
+        font-size:15.5px;
+        line-height:1.5;
+      }
+      .contact-links{
+        width:100%;
+        justify-items:start;
+      }
+      .contact-links a{
+        width:100%;
+        min-height:45px;
+        font-size:13px;
+      }
+
+      footer{
+        padding:20px 0 34px;
+        gap:10px;
+      }
+    }
+
+
+    /* Mobile menu — full-screen expanding overlay inspired by Tobias Ahlin's motion-led navigation. */
+    @media (max-width:700px){
+      .nav{
+        isolation:isolate;
+      }
+
+      .nav-toggle{
+        width:46px;
+        height:46px;
+        border:0;
+        border-radius:0;
+        background:transparent;
+        box-shadow:none;
+        color:var(--ink);
+        z-index:12;
+        transition:transform .32s cubic-bezier(.2,.7,.2,1), color .22s ease;
+      }
+      .nav-toggle:hover{
+        transform:none;
+        background:transparent;
+        border-color:transparent;
+        box-shadow:none;
+      }
+      .nav-toggle:focus-visible{
+        outline:2px solid rgba(54,88,255,.28);
+        outline-offset:4px;
+        border-radius:10px;
+      }
+
+      .nav-toggle span{
+        width:22px;
+        height:2px;
+        background:currentColor;
+        transition:
+          transform .42s cubic-bezier(.2,.7,.2,1),
+          opacity .22s ease,
+          width .32s cubic-bezier(.2,.7,.2,1);
+      }
+      .nav-toggle span:nth-child(1){transform:translateY(-7px)}
+      .nav-toggle span:nth-child(2){transform:translateY(0)}
+      .nav-toggle span:nth-child(3){transform:translateY(7px)}
+
+      .nav.menu-open .nav-toggle{
+        color:#111;
+      }
+      .nav.menu-open .nav-toggle span:nth-child(1){
+        transform:translateY(0) rotate(45deg);
+      }
+      .nav.menu-open .nav-toggle span:nth-child(2){
+        opacity:0;
+        transform:translateX(8px);
+      }
+      .nav.menu-open .nav-toggle span:nth-child(3){
+        transform:translateY(0) rotate(-45deg);
+      }
+
+      /* The large field expands from the menu button, giving the menu its reveal moment. */
+      .nav-scrim{
+        position:fixed;
+        inset:0;
+        display:block;
+        height:100svh;
+        background:
+          radial-gradient(circle at 92% 7%, rgba(54,88,255,.16), transparent 24%),
+          radial-gradient(circle at 78% 24%, rgba(239,79,154,.15), transparent 30%),
+          linear-gradient(135deg, #fffdf8 0%, #f8f5ed 55%, #f1eef8 100%);
+        opacity:1;
+        visibility:hidden;
+        pointer-events:none;
+        clip-path:circle(0 at calc(100% - 37px) 33px);
+        -webkit-clip-path:circle(0 at calc(100% - 37px) 33px);
+        transition:
+          clip-path .72s cubic-bezier(.2,.8,.16,1),
+          opacity .3s ease,
+          visibility 0s linear .72s;
+        z-index:3;
+      }
+
+      .nav.menu-open .nav-scrim{
+        visibility:visible;
+        pointer-events:auto;
+        clip-path:circle(150vmax at calc(100% - 37px) 33px);
+        -webkit-clip-path:circle(150vmax at calc(100% - 37px) 33px);
+        transition:
+          clip-path .72s cubic-bezier(.2,.8,.16,1),
+          opacity .3s ease,
+          visibility 0s;
+      }
+
+      /* Replace the compact dropdown with a large, editorial full-screen menu on phones only. */
+      .nav-links{
+        position:absolute;
+        top:0;
+        left:0;
+        width:100%;
+        height:100svh;
+        max-width:none;
+        max-height:none;
+        overflow:hidden;
+        display:flex;
+        flex-direction:column;
+        align-items:flex-start;
+        justify-content:center;
+        gap:0;
+        padding:96px 28px 42px;
+        background:transparent;
+        border:0;
+        border-radius:0;
+        box-shadow:none;
+        opacity:0;
+        visibility:hidden;
+        pointer-events:none;
+        transform:translateY(18px);
+        transform-origin:center;
+        z-index:9;
+        transition:
+          opacity .28s ease,
+          transform .52s cubic-bezier(.2,.75,.2,1),
+          visibility 0s linear .3s;
+      }
+
+      .nav.menu-open .nav-links{
+        opacity:1;
+        visibility:visible;
+        pointer-events:auto;
+        transform:none;
+        transition:
+          opacity .28s ease .16s,
+          transform .62s cubic-bezier(.2,.75,.2,1) .12s,
+          visibility 0s;
+      }
+
+      .nav-links a{
+        display:block;
+        width:max-content;
+        max-width:100%;
+        color:var(--ink);
+        font-size:clamp(34px,10.5vw,58px);
+        line-height:.98;
+        letter-spacing:-.055em;
+        font-weight:850;
+        padding:11px 0 15px;
+        margin:0;
+        opacity:0;
+        transform:translateY(22px);
+        transition:
+          color .2s ease,
+          opacity .42s ease,
+          transform .55s cubic-bezier(.2,.75,.2,1);
+      }
+
+      .nav.menu-open .nav-links a{
+        opacity:1;
+        transform:none;
+      }
+      .nav.menu-open .nav-links a:nth-child(1){transition-delay:.22s}
+      .nav.menu-open .nav-links a:nth-child(2){transition-delay:.27s}
+      .nav.menu-open .nav-links a:nth-child(3){transition-delay:.32s}
+      .nav.menu-open .nav-links a:nth-child(4){transition-delay:.37s}
+      .nav.menu-open .nav-links a:nth-child(5){transition-delay:.42s}
+      .nav.menu-open .nav-links a:nth-child(6){transition-delay:.47s}
+      .nav.menu-open .nav-links a:nth-child(7){transition-delay:.52s}
+
+      .nav-links a:hover{
+        color:var(--ink);
+        background:transparent;
+      }
+
+      .nav-links a::after{
+        left:0;
+        right:auto;
+        bottom:7px;
+        width:52px;
+        height:3px;
+        border-radius:99px;
+        background:linear-gradient(90deg,var(--blue),var(--purple),var(--pink));
+        transform:scaleX(0);
+        transform-origin:left center;
+        opacity:0;
+        transition:transform .34s cubic-bezier(.2,.7,.2,1),opacity .22s ease;
+      }
+      .nav-links a.active::after{
+        transform:scaleX(1);
+        opacity:1;
+      }
+
+      .scroll-progress{
+        z-index:14;
+      }
+
+      body.nav-menu-open{
+        overflow:hidden;
+      }
+    }
+
+    @media (prefers-reduced-motion:reduce) and (max-width:700px){
+      .nav-scrim,
+      .nav-links,
+      .nav-links a,
+      .nav-toggle,
+      .nav-toggle span{
+        transition:none!important;
+        animation:none!important;
+      }
+    }
+
   </style>
 </head>
 
 <body>
   <!-- Inline SVG icon set -->
-  <!-- Portfolio version 23 -->
+  <!-- Portfolio version 28 -->
   <svg width="0" height="0" style="position:absolute" aria-hidden="true">
     <symbol id="icon-mail" viewBox="0 0 24 24">
       <path d="M3.2 5h17.6c.66 0 1.2.54 1.2 1.2v11.6c0 .66-.54 1.2-1.2 1.2H3.2c-.66 0-1.2-.54-1.2-1.2V6.2C2 5.54 2.54 5 3.2 5Zm1.1 2.2L12 12.5l7.7-5.3H4.3Zm15.3 9.6V9.9L12.7 15a1.2 1.2 0 0 1-1.4 0L4.4 9.9v6.9h15.2Z"></path>
@@ -1467,7 +2077,21 @@
   <header class="nav" id="nav">
     <div class="nav-inner">
       <a class="brand" href="#top">FEKRY.</a>
-      <nav class="nav-links" aria-label="Primary">
+
+      <button
+        class="nav-toggle"
+        id="navToggle"
+        type="button"
+        aria-label="Open navigation menu"
+        aria-controls="primaryNav"
+        aria-expanded="false"
+      >
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      <nav class="nav-links" id="primaryNav" aria-label="Primary">
         <a href="#about" class="about-link">About</a>
         <a href="#work">Work</a>
         <a href="#experience">Experience</a>
@@ -1476,6 +2100,10 @@
         <a href="#certifications">Certifications</a>
         <a href="#contact">Contact</a>
       </nav>
+    </div>
+    <div class="nav-scrim" id="navScrim" aria-hidden="true"></div>
+    <div class="scroll-progress" aria-hidden="true">
+      <span class="scroll-progress-bar" id="scrollProgressBar"></span>
     </div>
   </header>
 
@@ -1520,7 +2148,7 @@
         </div>
 
         <div class="portrait-wrap reveal">
-          <img class="portrait" src="profile.jpeg" alt="Fekry Mansour — Computer Engineer" />
+          <img class="portrait" src="profile.jpeg" alt="Fekry Mansour — Computer Engineer" loading="lazy" decoding="async" />
           <div class="portrait-tag">Computer Engineer</div>
         </div>
       </div>
@@ -1666,13 +2294,11 @@
             <div>
               <div class="timeline-brand" title="Qatar University">
                 <img
-                  src="https://wish.org.qa/wp-content/uploads/2024/10/QU-LOGO-1-1.png"
+                  src="https://upload.wikimedia.org/wikipedia/commons/4/49/%D8%B4%D8%B9%D8%A7%D8%B1_%D8%AC%D8%A7%D9%85%D8%B9%D8%A9_%D9%82%D8%B7%D8%B1.png"
                   alt="Qatar University logo"
                   loading="lazy"
-                  referrerpolicy="no-referrer"
-                  onerror="this.classList.add('is-broken')"
+                  decoding="async"
                 />
-                <span class="timeline-fallback">QU</span>
               </div>
             </div>
 
@@ -1692,12 +2318,11 @@
               <div class="timeline-brand" title="CamelCodeQA">
                 <img
                   src="https://camel2.shop/static/images/logo.png"
-                  alt="CamelCodeQA logo"
+                  alt="CamelCode logo"
                   loading="lazy"
+                  decoding="async"
                   referrerpolicy="no-referrer"
-                  onerror="this.classList.add('is-broken')"
                 />
-                <span class="timeline-fallback">CC</span>
               </div>
             </div>
 
@@ -1751,7 +2376,7 @@
           <div class="skills-marquee-track" id="skillsMarqueeTrack">
             <div class="skill-marquee-set">
               <!-- AI / LLM stack -->
-              <div class="skill-marquee-item"><div class="skill-marquee-icon"><img src="claude-icon.png" alt="Claude logo" /></div><span class="skill-marquee-name">Claude</span></div>
+              <div class="skill-marquee-item"><div class="skill-marquee-icon"><img src="certification-icons/claude-icon.png" alt="Claude logo" /></div><span class="skill-marquee-name">Claude</span></div>
               <div class="skill-marquee-item"><div class="skill-marquee-icon"><img src="skill-icons/ollama.png" alt="Ollama logo" /></div><span class="skill-marquee-name">Ollama</span></div>
               <div class="skill-marquee-item"><div class="skill-marquee-icon"><img src="skill-icons/vllm.png" alt="vLLM logo" /></div><span class="skill-marquee-name">vLLM</span></div>
               <div class="skill-marquee-item"><div class="skill-marquee-icon"><img src="skill-icons/hugging-face.png" alt="Hugging Face logo" /></div><span class="skill-marquee-name">Hugging Face</span></div>
@@ -1770,7 +2395,7 @@
             </div>
             <div class="skill-marquee-set" aria-hidden="true">
               <!-- AI / LLM stack -->
-              <div class="skill-marquee-item"><div class="skill-marquee-icon"><img src="claude-icon.png" alt="" /></div><span class="skill-marquee-name">Claude</span></div>
+              <div class="skill-marquee-item"><div class="skill-marquee-icon"><img src="certification-icons/claude-icon.png" alt="" /></div><span class="skill-marquee-name">Claude</span></div>
               <div class="skill-marquee-item"><div class="skill-marquee-icon"><img src="skill-icons/ollama.png" alt="" /></div><span class="skill-marquee-name">Ollama</span></div>
               <div class="skill-marquee-item"><div class="skill-marquee-icon"><img src="skill-icons/vllm.png" alt="" /></div><span class="skill-marquee-name">vLLM</span></div>
               <div class="skill-marquee-item"><div class="skill-marquee-icon"><img src="skill-icons/hugging-face.png" alt="" /></div><span class="skill-marquee-name">Hugging Face</span></div>
@@ -1825,37 +2450,37 @@
 
         <div class="certs stagger">
           <a class="cert reveal" href="https://qucloud-my.sharepoint.com/:b:/g/personal/fm2208253_qu_edu_qa/EVoCHYBL3FdCmEbZLXxaWIABNGDcSKaPBRKDhQU2soJ9_g?e=DXePt9" target="_blank" rel="noreferrer">
-            <span class="cert-provider cert-provider-image cert-coursera-image" aria-hidden="true"><img src="coursera-icon.png" alt=""></span><span class="cert-title">Technical Support Fundamentals — Coursera</span><span class="cert-arrow">↗</span>
+            <span class="cert-provider cert-provider-image cert-coursera-image" aria-hidden="true"><img src="certification-icons/coursera-icon.png" alt=""></span><span class="cert-title">Technical Support Fundamentals — Coursera</span><span class="cert-arrow">↗</span>
           </a>
           <a class="cert reveal" href="https://qucloud-my.sharepoint.com/:b:/g/personal/fm2208253_qu_edu_qa/IQB6rjENveLQTq1uLPNKoXX7AWnYC4oWEUtZix1P6DF_TP8?e=rYaPNw" target="_blank" rel="noreferrer">
-            <span class="cert-provider cert-provider-image" aria-hidden="true"><img src="claude-icon.png" alt=""></span><span class="cert-title">Claude 101 — Anthropic</span><span class="cert-arrow">↗</span>
+            <span class="cert-provider cert-provider-image" aria-hidden="true"><img src="certification-icons/claude-icon.png" alt=""></span><span class="cert-title">Claude 101 — Anthropic</span><span class="cert-arrow">↗</span>
           </a>
           <a class="cert reveal" href="https://qucloud-my.sharepoint.com/:b:/g/personal/fm2208253_qu_edu_qa/IQB4r2pp7K03QrRFZCqIJvwDAdEwFG9hD5Xsw85_kGug4dA?e=QTJBUX" target="_blank" rel="noreferrer">
-            <span class="cert-provider cert-provider-image" aria-hidden="true"><img src="claude-icon.png" alt=""></span><span class="cert-title">Claude Code 101 — Anthropic</span><span class="cert-arrow">↗</span>
+            <span class="cert-provider cert-provider-image" aria-hidden="true"><img src="certification-icons/claude-icon.png" alt=""></span><span class="cert-title">Claude Code 101 — Anthropic</span><span class="cert-arrow">↗</span>
           </a>
           <a class="cert reveal" href="https://qucloud-my.sharepoint.com/:b:/g/personal/fm2208253_qu_edu_qa/IQB6L7N4NcpNRrmlaDKxAcgjARMs1sNiyL0Jr2_nhtwzjSs?e=g4adeJ" target="_blank" rel="noreferrer">
-            <span class="cert-provider cert-provider-image" aria-hidden="true"><img src="claude-icon.png" alt=""></span><span class="cert-title">Claude Code in Action — Anthropic</span><span class="cert-arrow">↗</span>
+            <span class="cert-provider cert-provider-image" aria-hidden="true"><img src="certification-icons/claude-icon.png" alt=""></span><span class="cert-title">Claude Code in Action — Anthropic</span><span class="cert-arrow">↗</span>
           </a>
           <a class="cert reveal" href="https://qucloud-my.sharepoint.com/:b:/g/personal/fm2208253_qu_edu_qa/IQCBAJtUqiZwSolrI1I_FrojAejjJ1O9dO6pNGt73l4EbO0?e=OnKpRd" target="_blank" rel="noreferrer">
-            <span class="cert-provider cert-provider-image" aria-hidden="true"><img src="claude-icon.png" alt=""></span><span class="cert-title">Introduction to Model Context Protocol — Anthropic</span><span class="cert-arrow">↗</span>
+            <span class="cert-provider cert-provider-image" aria-hidden="true"><img src="certification-icons/claude-icon.png" alt=""></span><span class="cert-title">Introduction to Model Context Protocol — Anthropic</span><span class="cert-arrow">↗</span>
           </a>
           <a class="cert reveal" href="https://qucloud-my.sharepoint.com/:b:/g/personal/fm2208253_qu_edu_qa/IQCGw_pCoHuoQZtBpTr2Sh8sASEV7M08ByPvZUcd6UiGeF8?e=jSMRMS" target="_blank" rel="noreferrer">
-            <span class="cert-provider cert-provider-image" aria-hidden="true"><img src="claude-icon.png" alt=""></span><span class="cert-title">AI Fluency: Framework &amp; Foundations — Anthropic</span><span class="cert-arrow">↗</span>
+            <span class="cert-provider cert-provider-image" aria-hidden="true"><img src="certification-icons/claude-icon.png" alt=""></span><span class="cert-title">AI Fluency: Framework &amp; Foundations — Anthropic</span><span class="cert-arrow">↗</span>
           </a>
           <a class="cert reveal" href="https://qucloud-my.sharepoint.com/:b:/g/personal/fm2208253_qu_edu_qa/IQCKLmZg98h3RZMFhntouMQ7ARe-5JLcDTrp7l3ZqMyUEUU?e=g2Ejaj" target="_blank" rel="noreferrer">
-            <span class="cert-provider cert-provider-image" aria-hidden="true"><img src="cisco-icon.png" alt=""></span><span class="cert-title">CCNA Introduction to Networks — Cisco</span><span class="cert-arrow">↗</span>
+            <span class="cert-provider cert-provider-image" aria-hidden="true"><img src="certification-icons/cisco-icon.png" alt=""></span><span class="cert-title">CCNA Introduction to Networks — Cisco</span><span class="cert-arrow">↗</span>
           </a>
           <a class="cert reveal" href="https://qucloud-my.sharepoint.com/:b:/g/personal/fm2208253_qu_edu_qa/ERb3ydv_nXtJo8a51kddzwIBpK84DnlpG8Sr5luSEtYSZw?e=Lvj6bG" target="_blank" rel="noreferrer">
-            <span class="cert-provider cert-provider-image" aria-hidden="true"><img src="udemy-icon.png" alt=""></span><span class="cert-title">Pricing Fundamentals — Dr. Ihab Mousallam</span><span class="cert-arrow">↗</span>
+            <span class="cert-provider cert-provider-image" aria-hidden="true"><img src="certification-icons/udemy-icon.png" alt=""></span><span class="cert-title">Pricing Fundamentals — Dr. Ihab Mousallam</span><span class="cert-arrow">↗</span>
           </a>
           <a class="cert reveal" href="https://qucloud-my.sharepoint.com/:b:/g/personal/fm2208253_qu_edu_qa/EU-OE307kc5DtvmcdCWt308BpALPR68xRzVVdxhOcTVLAA?e=lffi4q" target="_blank" rel="noreferrer">
-            <span class="cert-provider cert-provider-image" aria-hidden="true"><img src="udemy-icon.png" alt=""></span><span class="cert-title">SWOT Analysis — Dr. Ihab Mousallam</span><span class="cert-arrow">↗</span>
+            <span class="cert-provider cert-provider-image" aria-hidden="true"><img src="certification-icons/udemy-icon.png" alt=""></span><span class="cert-title">SWOT Analysis — Dr. Ihab Mousallam</span><span class="cert-arrow">↗</span>
           </a>
           <a class="cert reveal" href="https://qucloud-my.sharepoint.com/:b:/g/personal/fm2208253_qu_edu_qa/EZ7y7XsmirJIlwxSdP7LcrwBl3K280J2jSu_OzgZZvw82Q?e=3JXEpW" target="_blank" rel="noreferrer">
-            <span class="cert-provider cert-provider-image" aria-hidden="true"><img src="udemy-icon.png" alt=""></span><span class="cert-title">Effective Sales Skills — Dr. Ihab Mousallam</span><span class="cert-arrow">↗</span>
+            <span class="cert-provider cert-provider-image" aria-hidden="true"><img src="certification-icons/udemy-icon.png" alt=""></span><span class="cert-title">Effective Sales Skills — Dr. Ihab Mousallam</span><span class="cert-arrow">↗</span>
           </a>
           <a class="cert reveal" href="https://qucloud-my.sharepoint.com/:b:/g/personal/fm2208253_qu_edu_qa/ERPH9zLQdkJAguhdhYeEQs0B5GhPPmHODz4qxseqB-ka7A?e=GfgJW7" target="_blank" rel="noreferrer">
-            <span class="cert-provider cert-provider-image cert-google-image" aria-hidden="true"><img src="google-icon.png" alt=""></span><span class="cert-title">Google Digital Skills Program — Google Skills</span><span class="cert-arrow">↗</span>
+            <span class="cert-provider cert-provider-image cert-google-image" aria-hidden="true"><img src="certification-icons/google-icon.png" alt=""></span><span class="cert-title">Google Digital Skills Program — Google Skills</span><span class="cert-arrow">↗</span>
           </a>
         </div>
       </div>
@@ -1932,7 +2557,12 @@
     <div class="chat-body" id="chatBody" hidden></div>
     <div class="chat-compose" id="chatCompose" hidden>
       <textarea class="chat-input" id="chatInput" placeholder="Ask about Fekry..." rows="1"></textarea>
-      <button class="chat-send" id="chatSend" aria-label="Send message">↑</button>
+      <button class="chat-send" id="chatSend" aria-label="Send message">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.15" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 19V5"></path>
+          <path d="m6 11 6-6 6 6"></path>
+        </svg>
+      </button>
     </div>
     <div class="chat-note" id="chatNote">
       Only information provided in Fekry’s public portfolio/CV should be treated as personal facts.
@@ -2070,50 +2700,135 @@ RULES
       }
     });
 
-    /* Active navigation with a subtle header motion on section changes */
+    /* Navigation, scrollspy, progress bar, and mobile menu */
     const navLinks = [...document.querySelectorAll(".nav-links a")];
     const navSections = [...document.querySelectorAll("[data-section]")];
+    const navToggle = document.getElementById("navToggle");
+    const navScrim = document.getElementById("navScrim");
+    const scrollProgressBar = document.getElementById("scrollProgressBar");
     let currentSectionId = "home";
     let navShiftTimer;
+    let scrollSpyRaf = 0;
+    let progressRaf = 0;
 
-    function setActiveSection(id) {
+    function setMobileMenu(open) {
+      if (!nav || !navToggle) return;
+      nav.classList.toggle("menu-open", open);
+      navToggle.setAttribute("aria-expanded", String(open));
+      navToggle.setAttribute("aria-label", open ? "Close navigation menu" : "Open navigation menu");
+      document.body.classList.toggle("nav-menu-open", open);
+      navScrim?.setAttribute("aria-hidden", String(!open));
+    }
+
+    function positionActiveMenuItem() {
+      if (window.innerWidth > 700) return;
+      const active = navLinks.find((link) => link.classList.contains("active"));
+      if (active && nav.classList.contains("menu-open")) {
+        active.scrollIntoView({ block: "nearest" });
+      }
+    }
+
+    function setActiveSection(id, animate = true) {
       const changed = currentSectionId !== id;
       currentSectionId = id;
+
       navLinks.forEach((link) => {
         const active = link.getAttribute("href") === `#${id}`;
         link.classList.toggle("active", active);
-        if (active) link.setAttribute("aria-current", "page");
+        if (active) link.setAttribute("aria-current", "location");
         else link.removeAttribute("aria-current");
       });
 
-      if (changed) {
+      if (changed && animate && id !== "home") {
         nav.classList.remove("section-shift");
         void nav.offsetWidth;
         nav.classList.add("section-shift");
         clearTimeout(navShiftTimer);
-        navShiftTimer = setTimeout(() => {
-          nav.classList.remove("section-shift");
-        }, 560);
+        navShiftTimer = setTimeout(() => nav.classList.remove("section-shift"), 560);
       }
+
+      positionActiveMenuItem();
     }
 
-    const navObserver = new IntersectionObserver((entries) => {
-      const visible = entries
-        .filter((entry) => entry.isIntersecting)
-        .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
-      if (visible) setActiveSection(visible.target.id);
-    }, {
-      rootMargin: "-28% 0px -58% 0px",
-      threshold: [0, .12, .25, .5, .75]
+    function updateScrollSpy() {
+      scrollSpyRaf = 0;
+      const headerHeight = nav ? nav.getBoundingClientRect().height : 0;
+      const probeY = window.scrollY + headerHeight + 35;
+      let nextSection = "home";
+
+      for (const section of navSections) {
+        const top = section.getBoundingClientRect().top + window.scrollY;
+        if (top <= probeY) nextSection = section.id;
+        else break;
+      }
+
+      const nearBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 8;
+      if (nearBottom && navSections.length) nextSection = navSections[navSections.length - 1].id;
+
+      setActiveSection(nextSection);
+    }
+
+    function queueScrollSpy() {
+      if (scrollSpyRaf) return;
+      scrollSpyRaf = requestAnimationFrame(updateScrollSpy);
+    }
+
+    function updateScrollProgress() {
+      progressRaf = 0;
+      if (!scrollProgressBar) return;
+      const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+      const ratio = Math.min(1, Math.max(0, window.scrollY / maxScroll));
+      scrollProgressBar.style.transform = `scaleX(${ratio})`;
+    }
+
+    function queueScrollProgress() {
+      if (progressRaf) return;
+      progressRaf = requestAnimationFrame(updateScrollProgress);
+    }
+
+    navToggle?.addEventListener("click", (event) => {
+      event.stopPropagation();
+      setMobileMenu(!nav.classList.contains("menu-open"));
+    });
+    navScrim?.addEventListener("click", () => setMobileMenu(false));
+
+    navLinks.forEach((link) => {
+      link.addEventListener("click", () => {
+        const id = link.getAttribute("href")?.slice(1);
+        if (id) setActiveSection(id, false);
+        setMobileMenu(false);
+      });
     });
 
-    navSections.forEach((section) => navObserver.observe(section));
+    document.addEventListener("click", (event) => {
+      if (!nav.classList.contains("menu-open")) return;
+      if (!event.target.closest("#nav")) setMobileMenu(false);
+    });
 
-    const homeObserver = new IntersectionObserver((entries) => {
-      if (entries.some((entry) => entry.isIntersecting)) setActiveSection("home");
-    }, { rootMargin: "-55% 0px -20% 0px", threshold: 0 });
-    homeObserver.observe(document.querySelector(".hero"));
-    setActiveSection("home");
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") setMobileMenu(false);
+    });
+
+    window.addEventListener("scroll", () => {
+      nav.classList.toggle("scrolled", window.scrollY > 20);
+      queueScrollSpy();
+      queueScrollProgress();
+    }, { passive: true });
+
+    window.addEventListener("resize", () => {
+      if (window.innerWidth > 700) setMobileMenu(false);
+      queueScrollSpy();
+      queueScrollProgress();
+    }, { passive: true });
+
+    window.addEventListener("load", () => {
+      queueScrollSpy();
+      queueScrollProgress();
+    }, { once: true });
+
+    setActiveSection("home", false);
+    queueScrollSpy();
+    queueScrollProgress();
 
     /* Section accent reveal */
     const sectionObserver = new IntersectionObserver((entries) => {
@@ -2366,6 +3081,11 @@ RULES
       const text = chatInput.value.trim();
 
       if (!text || !state.apiKey || chatSend.disabled) return;
+
+      chatSend.classList.remove("is-pulsing");
+      void chatSend.offsetWidth;
+      chatSend.classList.add("is-pulsing");
+      window.setTimeout(() => chatSend.classList.remove("is-pulsing"), 360);
 
       chatInput.value = "";
       chatInput.style.height = "44px";
