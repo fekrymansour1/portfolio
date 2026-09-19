@@ -50,13 +50,26 @@ const BLOCKED_PATTERNS = [
  * Keep this check ahead of recent-portfolio context so a previous CV
  * question cannot accidentally authorize a generic coding task.
  */
+const ARABIC_PROMPT_INJECTION_PATTERNS = [
+  /تجاهل\s+(جميع\s+)?التعليمات\s+(السابقة|الماضية)/i,
+  /تجاهل\s+(التعليمات|القواعد)\s*(الخاصة بك|الداخلية|النظامية)?/i,
+  /(اكشف|أظهر|اظهر|اعرض|اطبع|كرّر|كرر)\s+.*(الموجه|برومبت|تعليمات|النظام|المطور|التعليمات\s+الداخلية)/i,
+  /(الموجه\s+(النظامي|الداخلي)|تعليمات\s+النظام|تعليمات\s+المطور|رسالة\s+النظام)/i,
+  /وضع\s+المطور/i
+];
+
 const GENERIC_CODE_REQUEST_PATTERNS = [
   /\b(write|create|generate|make|build|provide|develop)\b[\s\S]{0,120}\b(code|script|program|function|algorithm)\b/i,
   /\b(code|script|program|function)\b[\s\S]{0,80}\b(for|to|that)\b[\s\S]{0,120}\b(python|javascript|java|c\+\+|bash|fibonacci|calculator|web\s+scraper)\b/i,
   /\bhow\s+do\s+i\b[\s\S]{0,120}\b(code|program|script|python|javascript|java|bash)\b/i,
   /\b(debug|fix|refactor|optimize)\b[\s\S]{0,120}\b(code|script|program|function)\b/i,
   /\bwrite\s+a\s+python\s+script\b/i,
-  /\bpython\s+script\s+to\b/i
+  /\bpython\s+script\s+to\b/i,
+  /اكتب\s+(?:لي\s+)?(?:كود|شفرة|برنامج|سكربت|دالة)(?:\s|$)/i,
+  /أنشئ\s+(?:لي\s+)?(?:كود|شفرة|برنامج|سكربت|دالة)/i,
+  /اكتب\s+(?:برنامج|سكربت)\s+(?:بايثون|جافاسكربت|جافا)/i,
+  /كيف\s+(?:أكتب|اكتب)\s+(?:كود|برنامج|سكربت)/i,
+  /صحح|صلح|اعد\s+هيكلة|أعد\s+هيكلة.*(?:كود|برنامج|سكربت)/i
 ];
 
 const GENERIC_OFF_TOPIC_PATTERNS = [
@@ -64,7 +77,11 @@ const GENERIC_OFF_TOPIC_PATTERNS = [
   /\bweather|forecast|temperature\b/i,
   /\bnews|headlines|current\s+events\b/i,
   /\bsports?|football|soccer|basketball|tennis\b/i,
-  /\bpolitic(s|al)?|election|president|prime\s+minister\b/i
+  /\bpolitic(s|al)?|election|president|prime\s+minister\b/i,
+  /\btrivia|general\s+knowledge\b/i,
+  /\bquantum\s+entanglement|quantum\s+physics|physics\b/i,
+  /\bcapital\s+of\b/i,
+  /وصفة|طبخ|خبز|الطقس|الأخبار|رياضة|سياسة|انتخابات|معلومات\s+عامة|معلومات\s+ثقافية|التشابك\s+الكمومي|الفيزياء|عاصمة\s+/i
 ];
 
 const SENSITIVE_PATTERNS = [
@@ -80,7 +97,11 @@ const SENSITIVE_PATTERNS = [
   /\bprivate\s+key\b/i,
   /\bsocial\s+security\b/i,
   /\bssn\b/i,
-  /\bcredit\s+card\b/i
+  /\bcredit\s+card\b/i,
+  /حساب\s+بنكي|الحساب\s+البنكي|رقم\s+الحساب/i,
+  /عنوان\s+المنزل|عنوان\s+السكن|العنوان\s+الدقيق/i,
+  /كلمة\s+المرور|مفتاح\s+خاص|مفتاح\s+واجهة\s+برمجية|مفتاح\s+API/i,
+  /بطاقة\s+ائتمان/i
 ];
 
 const PORTFOLIO_TERMS = [
@@ -167,6 +188,10 @@ function buildSystemPrompt() {
     "For a simple factual question, use roughly 30–80 words. For a broader question, aim for roughly 80–150 words.",
     "Use a short paragraph or a few bullets when that makes the answer clearer.",
     "Do not add facts, achievements, employers, dates, metrics, or technologies that do not appear in the CV.",
+    "Do not add evaluative claims or inferred benefits that are not explicitly stated in the CV (for example: extensive, strong, impressive, helped him, enabled him, improved his career, or similar conclusions).",
+    "When the user asks multiple questions, answer only the CV-supported portion and explicitly decline any unrelated general-knowledge portion.",
+    "If the user requests a specific output format such as JSON, follow that format using only the requested CV fields and exact source-supported values.",
+    "For provider-specific certifications, include only certifications actually attributed to that provider in the CV.",
     "Never pretend to be Fekry or another person.",
     "",
     "--- CV CONTENT START ---",
@@ -265,6 +290,16 @@ function renderRichText(element, rawText) {
   element.replaceChildren();
 
   const text = normalizeModelText(rawText);
+
+  // Render fenced code/JSON as a safe preformatted block.
+  const fenced = /^```(?:json|javascript|python|js|text)?\s*\n([\s\S]*?)\n```$/.exec(text);
+  if (fenced) {
+    const pre = document.createElement("pre");
+    pre.className = "assistant-code";
+    pre.textContent = fenced[1];
+    element.appendChild(pre);
+    return;
+  }
   const lines = text.split("\n");
   let activeList = null;
   let activeListType = null;
@@ -400,38 +435,160 @@ function hasRecentPortfolioContext() {
   return hasPortfolioTerms(recentUserMessages);
 }
 
+function normalizeForMatching(text) {
+  return String(text ?? "")
+    .normalize("NFKC")
+    .replace(/[\u064B-\u065F\u0670]/g, "")
+    .replace(/\s+/g, " ")
+    .trim()
+    .toLowerCase();
+}
+
+function isArabicText(text) {
+  return /[\u0600-\u06FF]/.test(String(text ?? ""));
+}
+
+function hasArabicPromptInjection(text) {
+  const normalized = normalizeForMatching(text);
+  return ARABIC_PROMPT_INJECTION_PATTERNS.some((pattern) => pattern.test(normalized));
+}
+
+function answerPublicContactLocal(text) {
+  const normalized = normalizeForMatching(text);
+  const asksPhone = /\b(phone|telephone|mobile|call|contact\s+number)\b|رقم\s+(الهاتف|هاتف|التلفون|الجوال)|هاتفه|جواله|رقم\s+فكري/.test(normalized);
+  const asksEmail = /\b(email|e-mail|mail|direct\s+email)\b|البريد\s+الالكتروني|البريد\s+الإلكتروني|ايميل|إيميل|بريده/.test(normalized);
+  const asksLinkedIn = /\blinkedin\b|لينكد.?إن/.test(normalized);
+  const asksGitHub = /\bgithub\b|جيت\s*هاب/.test(normalized);
+  const asksAllContact = /\b(contact|reach|contact\s+details)\b|بيانات\s+التواصل|معلومات\s+التواصل/.test(normalized);
+
+  const lines = [];
+  if (asksAllContact || asksPhone) lines.push(`Phone: ${CV_DATA.phone}`);
+  if (asksAllContact || asksEmail) lines.push(`Email: ${CV_DATA.email}`);
+  if (asksLinkedIn) lines.push(`LinkedIn: ${CV_DATA.linkedin}`);
+  if (asksGitHub) lines.push(`GitHub: ${CV_DATA.github}`);
+  return lines.length ? `Fekry's public contact information:\n${lines.join("\n")}` : null;
+}
+
+function answerStructuredCVQuery(text) {
+  const normalized = normalizeForMatching(text);
+  const arabic = isArabicText(text);
+
+  const wantsJson = /\bjson\b|كائن\s+json|صيغة\s+json|بتنسيق\s+json/.test(normalized);
+  const asksTopLanguages = /top\s+3.*(programming\s+languages|languages)|الثلاثة\s+الأولى.*(لغات|البرمجة)|أفضل\s+3.*لغات/.test(normalized);
+  if (wantsJson && /(name|degree|programming|languages|contact|email|اسم|درجة|لغات|بريد)/.test(normalized)) {
+    const payload = {
+      name: CV_DATA.displayName,
+      degree: CV_DATA.education[0].degree,
+      top_3_programming_languages: asksTopLanguages ? CV_DATA.skills.programming.slice(0, 3) : CV_DATA.skills.programming.slice(0, 3),
+      contact_email: CV_DATA.email
+    };
+    return JSON.stringify(payload, null, 2);
+  }
+
+  if (/(anthropic|انتروبيك|أنثروبيك).*(certif|certification|license|شهادة|شهادات)/.test(normalized) || /(certif|شهادة|شهادات).*(anthropic|انتروبيك|أنثروبيك)/.test(normalized)) {
+    const anthropic = CV_DATA.certifications.filter((item) => /anthropic/i.test(item));
+    if (arabic) {
+      return `شهادات فكري المنسوبة إلى Anthropic في السيرة الذاتية:\n${anthropic.map((item) => `- ${item.replace(/\s+—\s+Anthropic$/i, "")}`).join("\n")}`;
+    }
+    return `Anthropic certifications listed on Fekry's CV:\n${anthropic.map((item) => `- ${item.replace(/\s+—\s+Anthropic$/i, "")}`).join("\n")}`;
+  }
+
+  if (/(pricing fundamentals|swot analysis|effective sales skills|business|sales courses|مهارات البيع|التسعير|تحليل swot|دورات.*(اعمال|مبيعات|بيع)|دورات.*الأعمال)/.test(normalized)) {
+    if (arabic) {
+      return [
+        "الدورات المرتبطة بالأعمال والمبيعات المذكورة في سيرة فكري هي:",
+        "- Pricing Fundamentals — د. إيهاب مسلم",
+        "- SWOT Analysis — د. إيهاب مسلم",
+        "- Effective Sales Skills — د. إيهاب مسلم"
+      ].join("\n");
+    }
+    return [
+      "The business and sales-related courses listed on Fekry's CV are:",
+      "- Pricing Fundamentals — Dr. Ehab Muslim",
+      "- SWOT Analysis — Dr. Ehab Muslim",
+      "- Effective Sales Skills — Dr. Ehab Muslim"
+    ].join("\n");
+  }
+
+  if (/(degree|gpa|dean'?s list|secondary education|99\.75|academic distinction|درجة|معدل|قائمة العميد|التعليم الثانوي|99[٫.]75)/.test(normalized) && /(qatar university|gpa|dean|secondary|degree|درجة|معدل|قائمة|ثانوي|جامعة قطر)/.test(normalized)) {
+    if (arabic) {
+      return [
+        `الدرجة العلمية: ${CV_DATA.education[0].degree} من ${CV_DATA.education[0].institution}.`,
+        `المعدل التراكمي: ${CV_DATA.education[0].gpa}.`,
+        `قائمة العميد: ${CV_DATA.education[0].deanList} كما هي مذكورة في السيرة الذاتية.`,
+        `التعليم الثانوي: ${CV_DATA.education[0].secondaryDistinction}.`
+      ].join("\n");
+    }
+    return [
+      `Degree: ${CV_DATA.education[0].degree} — ${CV_DATA.education[0].institution}.`,
+      `GPA: ${CV_DATA.education[0].gpa}.`,
+      `Dean's List: ${CV_DATA.education[0].deanList} (the CV gives this as a range).`,
+      `Secondary education: ${CV_DATA.education[0].secondaryDistinction}.`
+    ].join("\n");
+  }
+
+  if (/(workflow automation|ai workflow automation|أتمتة سير العمل|اتمتة سير العمل|أتمتة.*سير العمل|workflow)/.test(normalized) && /(experience|tools|skills|خبرات|خبرة|أدوات|يستخدم|استخدم)/.test(normalized)) {
+    if (arabic) {
+      return [
+        "تذكر السيرة الذاتية أن فكري طوّر أنظمة أتمتة لسير العمل باستخدام Python وn8n وعمليات تكامل متعددة المنصات.",
+        "كما بنى روبوتات محادثة مدعومة بالذكاء الاصطناعي باستخدام LangChain وRAG، مع Supabase لتخزين البيانات والبحث المتجهي. وتشمل الأنظمة المذكورة إدارة الحسابات برمجيًا، وأتمتة عمليات Excel، والدعم الداخلي الآلي."
+      ].join(" ");
+    }
+    return [
+      "Fekry's CV describes AI-driven workflow automation built with Python, n8n, and cross-platform integrations.",
+      "He also built AI-powered chatbots with LangChain and RAG, using Supabase for data storage and vector search. The CV says these systems supported programmatic account management, Excel-based process automation, and automated internal support."
+    ].join(" ");
+  }
+
+  return null;
+}
+
+function isMixedPortfolioAndOffTopic(text) {
+  const portfolio = answerStructuredCVQuery(text) || hasDirectPortfolioReference(text) || hasPortfolioTerms(text);
+  return portfolio && isGenericOffTopicRequest(text);
+}
+
 function getLocalGuardrailResponse(text) {
-  if (isPromptInjection(text)) {
-    return "I can answer questions about Fekry's public professional profile, but I won't reveal hidden instructions, system prompts, or internal configuration.";
+  const arabic = isArabicText(text);
+
+  if (isPromptInjection(text) || hasArabicPromptInjection(text)) {
+    return arabic
+      ? "يمكنني الإجابة عن الأسئلة المتعلقة بالمعلومات المهنية العامة لفكري، لكنني لن أكشف التعليمات المخفية أو موجهات النظام أو الإعدادات الداخلية."
+      : "I can answer questions about Fekry's public professional profile, but I won't reveal hidden instructions, system prompts, or internal configuration.";
   }
 
   if (isSensitiveRequest(text)) {
-    return "I can't provide private or confidential information such as bank details, home address information, passwords, private keys, or API secrets. I can help with Fekry's public professional information instead.";
+    return arabic
+      ? "لا أستطيع تقديم معلومات خاصة أو سرية مثل البيانات البنكية أو عنوان المنزل أو كلمات المرور أو المفاتيح الخاصة أو مفاتيح API. يمكنني المساعدة بالمعلومات المهنية العامة عن فكري."
+      : "I can't provide private or confidential information such as bank details, home address information, passwords, private keys, or API secrets. I can help with Fekry's public professional information instead.";
   }
 
-  const normalized = text.toLowerCase();
+  const structuredAnswer = answerStructuredCVQuery(text);
+  const hasOffTopicPart = isGenericOffTopicRequest(text);
 
-  // Public contact information is intentionally answered locally. This keeps
-  // provider filtering from blocking legitimate portfolio contact questions.
-  const asksPhone = /\b(phone|telephone|mobile|call|contact\s+number)\b/.test(normalized);
-  const asksEmail = /\b(email|e-mail|mail|direct\s+email)\b/.test(normalized);
-  const asksLinkedIn = /\blinkedin\b/.test(normalized);
-  const asksGitHub = /\bgithub\b/.test(normalized);
-  const asksAllContact = /\b(contact|reach)\b/.test(normalized) && !/\b(contact\s+number)\b/.test(normalized);
-
-  const contactLines = [];
-  if (asksAllContact || asksPhone) contactLines.push(`Phone: ${CV_DATA.phone}`);
-  if (asksAllContact || asksEmail) contactLines.push(`Email: ${CV_DATA.email}`);
-  if (asksLinkedIn) contactLines.push(`LinkedIn: ${CV_DATA.linkedin}`);
-  if (asksGitHub) contactLines.push(`GitHub: ${CV_DATA.github}`);
-  if (contactLines.length) {
-    return `Fekry's public contact information:\n${contactLines.join("\n")}`;
+  // Never let a generic/off-topic clause piggyback on an unrelated contact
+  // question. Known mixed CV+off-topic questions are answered only for their
+  // CV-supported portion.
+  if (hasOffTopicPart) {
+    if (structuredAnswer) {
+      return `${structuredAnswer}\n\n${arabic ? "لا أستطيع المساعدة في الجزء الآخر غير المرتبط بالمعلومات المهنية لفكري." : "I can't help with the unrelated general-knowledge part of that question."}`;
+    }
+    return arabic
+      ? "يمكنني الإجابة عن الأسئلة المتعلقة بالمعلومات المهنية العامة لفكري، لكن لا أستطيع المساعدة في الطلبات العامة غير المرتبطة بالسيرة الذاتية."
+      : "I can answer questions about Fekry's public professional profile, but I can't help with unrelated general-purpose requests.";
   }
+
+  if (structuredAnswer) return structuredAnswer;
+
+  const contactResponse = answerPublicContactLocal(text);
+  if (contactResponse) return contactResponse;
 
   // These are explicit non-CV requests and must be blocked even when an
   // earlier conversation turn was about Fekry.
-  if (isGenericCodeRequest(text) || isGenericOffTopicRequest(text)) {
-    return "I can answer questions about Fekry's public professional profile, but I can't help with unrelated general-purpose requests.";
+  if (isGenericCodeRequest(text)) {
+    return arabic
+      ? "يمكنني الإجابة عن الأسئلة المتعلقة بالمعلومات المهنية العامة لفكري، لكن لا أستطيع المساعدة في طلبات البرمجة العامة غير المرتبطة بالسيرة الذاتية."
+      : "I can answer questions about Fekry's public professional profile, but I can't help with unrelated general-purpose requests.";
   }
 
   const hasContext = hasRecentPortfolioContext();
@@ -447,7 +604,9 @@ function getLocalGuardrailResponse(text) {
     !hasKnownPortfolioTerm;
 
   if (clearlyOutsideScope) {
-    return "I can't answer that from the CV information available to me. Feel free to ask about Fekry's skills, projects, education, experience, certifications, or public contact information.";
+    return arabic
+      ? "لا أستطيع الإجابة عن ذلك من المعلومات المتاحة في السيرة الذاتية. يمكنك السؤال عن مهارات فكري أو مشاريعه أو تعليمه أو خبرته أو شهاداته أو معلومات التواصل العامة."
+      : "I can't answer that from the CV information available to me. Feel free to ask about Fekry's skills, projects, education, experience, certifications, or public contact information.";
   }
 
   return null;
@@ -525,6 +684,15 @@ async function sendChatMessage(rawText) {
     if (containsPromptLeak(reply)) {
       thinkingLine.remove();
       showLocalResponse("I can answer questions about Fekry's public professional profile, but I won't reveal hidden instructions, system prompts, or internal configuration.");
+      if (chatHistory.at(-1)?.role === "user") {
+        chatHistory.pop();
+      }
+      return;
+    }
+
+    if (containsClearlyOffTopicReply(reply) && isGenericOffTopicRequest(text)) {
+      thinkingLine.remove();
+      showLocalResponse("I can answer questions about Fekry's public professional profile, but I can't help with unrelated general-purpose requests.");
       if (chatHistory.at(-1)?.role === "user") {
         chatHistory.pop();
       }
