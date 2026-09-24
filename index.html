@@ -8,13 +8,16 @@
   <meta name="color-scheme" content="light" />
   <title>Fekry Mansour — Computer Engineer & AI Engineer</title>
 
+  <script>document.documentElement.classList.add("js");</script>
   <link rel="stylesheet" href="styles.css">
-
+  <link rel="preconnect" href="https://upload.wikimedia.org" crossorigin>
+  <script src="main.js" defer></script>
+  <script src="visitor-stats.js" defer></script>
 </head>
 
 <body>
   <!-- Inline SVG icon set -->
-  <!-- Portfolio version 28 -->
+  <!-- Portfolio version 39 -->
   <svg width="0" height="0" style="position:absolute" aria-hidden="true">
     <symbol id="icon-mail" viewBox="0 0 24 24">
       <path d="M3.2 5h17.6c.66 0 1.2.54 1.2 1.2v11.6c0 .66-.54 1.2-1.2 1.2H3.2c-.66 0-1.2-.54-1.2-1.2V6.2C2 5.54 2.54 5 3.2 5Zm1.1 2.2L12 12.5l7.7-5.3H4.3Zm15.3 9.6V9.9L12.7 15a1.2 1.2 0 0 1-1.4 0L4.4 9.9v6.9h15.2Z"></path>
@@ -26,6 +29,19 @@
 
     <symbol id="icon-location" viewBox="0 0 24 24">
       <path fill-rule="evenodd" d="M12 2.2a8.2 8.2 0 0 0-8.2 8.2c0 5.7 8.2 11.4 8.2 11.4s8.2-5.7 8.2-11.4A8.2 8.2 0 0 0 12 2.2Zm0 5.1a3.1 3.1 0 1 0 0 6.2 3.1 3.1 0 0 0 0-6.2Z" clip-rule="evenodd"></path>
+    </symbol>
+
+    <!-- Award medal -->
+    <symbol id="icon-award" viewBox="0 0 24 24">
+      <path fill-rule="evenodd" d="M12 2a6.2 6.2 0 1 1 0 12.4A6.2 6.2 0 0 1 12 2Zm0 2.7-1.1 2.3-2.5.4 1.8 1.7-.4 2.5 2.2-1.2 2.2 1.2-.4-2.5 1.8-1.7-2.5-.4L12 4.7Z" clip-rule="evenodd"></path>
+      <path d="M8 15.1 6.8 22l5.2-2.7 5.2 2.7-1.2-6.9a8.2 8.2 0 0 1-8 0Z"></path>
+    </symbol>
+
+    <!-- University campus building -->
+    <symbol id="icon-campus" viewBox="0 0 24 24">
+      <path d="M12 2.2 2.4 6.9v2.3h19.2V6.9L12 2.2Z"></path>
+      <path d="M4.3 10.6h2.6v7H4.3zM8.8 10.6h2.6v7H8.8zM12.6 10.6h2.6v7h-2.6zM17.1 10.6h2.6v7h-2.6z"></path>
+      <path d="M2.4 18.8h19.2v2.6H2.4z"></path>
     </symbol>
 
     <symbol id="icon-linkedin" viewBox="0 0 24 24">
@@ -83,46 +99,56 @@
     <!-- Hero -->
     <section class="hero site">
       <div class="hero-grid">
-        <div class="reveal">
-<h1 id="heroTitle" aria-label="Fekry Mansour"></h1>
+        <div>
+          <!-- Letters are pre-rendered so the name paints immediately, without waiting for JavaScript. -->
+          <h1 id="heroTitle" aria-label="Fekry Mansour"><span class="hero-word" aria-hidden="true"><span class="hero-letter" style="--i:0">F</span><span class="hero-letter" style="--i:1">e</span><span class="hero-letter" style="--i:2">k</span><span class="hero-letter" style="--i:3">r</span><span class="hero-letter" style="--i:4">y</span></span> <span class="hero-word" aria-hidden="true"><span class="hero-letter" style="--i:5">M</span><span class="hero-letter" style="--i:6">a</span><span class="hero-letter" style="--i:7">n</span><span class="hero-letter" style="--i:8">s</span><span class="hero-letter" style="--i:9">o</span><span class="hero-letter" style="--i:10">u</span><span class="hero-letter" style="--i:11">r</span></span></h1>
 
           <p class="hero-role">Computer Engineer · AI Agents &amp; Automation</p>
 
           <p class="hero-copy">Computer Engineer building AI agents, workflow automations, and useful technology—grounded in software, systems, and hands-on engineering.</p>
+        </div>
 
-          <div class="hero-facts" aria-label="Key information">
+        <!-- Desktop: a column of labels beside the name. Mobile: the same content flows under the intro. -->
+        <aside class="hero-side" aria-label="Key information and contact links">
+          <div class="hero-facts">
+            <span class="fact">
+              <svg class="fact-icon"><use href="#icon-campus"></use></svg>
+              <strong>Graduated from Qatar University · Computer Engineering</strong>
+            </span>
+            <span class="fact">
+              <svg class="fact-icon"><use href="#icon-award"></use></svg>
+              <strong>GPA 3.6 / 4.0</strong>
+            </span>
             <span class="fact">
               <svg class="fact-icon"><use href="#icon-location"></use></svg>
               <strong>Doha, Qatar</strong>
             </span>
-            <span class="fact"><strong>GPA 3.6 / 4.0</strong></span>
-            <span class="fact"><strong>Graduated from Qatar University · Computer Engineering</strong></span>
           </div>
 
+          <!-- Desktop shows the full contact details; phones keep the short labels. -->
           <div class="hero-links">
-            <a class="hero-link" href="mailto:fekry.n.mansour@gmail.com" aria-label="Email Fekry">
+            <a class="hero-link" href="mailto:fekry.n.mansour@gmail.com" aria-label="Email Fekry at fekry.n.mansour@gmail.com">
               <svg><use href="#icon-mail"></use></svg>
-              Email
+              <span class="hero-link-short">Email</span>
+              <span class="hero-link-full">fekry.n.mansour@gmail.com</span>
             </a>
-            <a class="hero-link" href="tel:+97455363197" aria-label="Call Fekry">
+            <a class="hero-link" href="tel:+97455363197" aria-label="Call Fekry at +974 5536 3197">
               <svg><use href="#icon-phone"></use></svg>
-              Phone
+              <span class="hero-link-short">Phone</span>
+              <span class="hero-link-full">+974 5536 3197</span>
             </a>
-            <a class="hero-link" href="https://linkedin.com/in/fekrymansour1/" target="_blank" rel="noreferrer" aria-label="LinkedIn">
+            <a class="hero-link" href="https://linkedin.com/in/fekrymansour1/" target="_blank" rel="noreferrer" aria-label="LinkedIn profile">
               <svg><use href="#icon-linkedin"></use></svg>
-              LinkedIn
+              <span class="hero-link-short">LinkedIn</span>
+              <span class="hero-link-full">linkedin.com/in/fekrymansour1</span>
             </a>
-            <a class="hero-link" href="https://github.com/fekrymansour1" target="_blank" rel="noreferrer" aria-label="GitHub">
+            <a class="hero-link" href="https://github.com/fekrymansour1" target="_blank" rel="noreferrer" aria-label="GitHub profile">
               <svg><use href="#icon-github"></use></svg>
-              GitHub
+              <span class="hero-link-short">GitHub</span>
+              <span class="hero-link-full">github.com/fekrymansour1</span>
             </a>
           </div>
-        </div>
-
-        <div class="portrait-wrap reveal">
-          <img class="portrait" src="profile.jpeg" alt="Fekry Mansour — Computer Engineer" loading="lazy" decoding="async" />
-          <div class="portrait-tag">Computer Engineer</div>
-        </div>
+        </aside>
       </div>
     </section>
 
@@ -276,13 +302,26 @@
             </div>
 
             <div>
-              <h3 class="timeline-title">Instructor Assistant</h3>
-              <div class="timeline-org">Qatar University · Python &amp; Java programming</div>
-              <ul class="timeline-list">
-                <li>Provide academic and technical support to undergraduate students in Python and Java programming courses.</li>
-                <li>Collaborate with faculty to deliver course materials, supervise hands-on activities, and improve student engagement.</li>
-                <li>Contributed 200+ working hours to instructional support, mentoring, and academic project assistance.</li>
-              </ul>
+              <div class="timeline-role">
+                <h3 class="timeline-title"><a href="https://www.qu.edu.qa/en-us/Colleges/ArtsSciences/deans-office/cas-success-oasis/Pages/default.aspx" target="_blank" rel="noreferrer">Instructor Assistant<span class="title-link-arrow" aria-hidden="true">↗</span></a></h3>
+                <div class="timeline-org">Qatar University · Doha, Qatar · Python &amp; Java programming</div>
+                <span class="timeline-date">2023 – 2026</span>
+                <ul class="timeline-list">
+                  <li>Provide academic and technical support to undergraduate students in Python and Java programming courses, and assist in labs and practical sessions.</li>
+                  <li>Collaborate with faculty to deliver course materials, supervise hands-on activities, and improve student engagement.</li>
+                  <li>Contributed 200+ working hours to instructional support, mentoring, and academic project assistance.</li>
+                </ul>
+              </div>
+
+              <div class="timeline-role">
+                <h3 class="timeline-title"><a href="https://www.qu.edu.qa/en-us/Colleges/ArtsSciences/deans-office/assistant-dean-students/Pages/special-needs.aspx" target="_blank" rel="noreferrer">Special Needs Support Assistant<span class="title-link-arrow" aria-hidden="true">↗</span></a></h3>
+                <div class="timeline-org">Qatar University · Doha, Qatar · Academic accessibility support</div>
+                <ul class="timeline-list">
+                  <li>Provided 250+ hours of academic support, attending classes to take and organize notes, transcribe lectures, and assist with course materials.</li>
+                  <li>Used AI tools, shortcuts, and automation to accelerate notetaking, organize information, and simplify access to academic resources.</li>
+                  <li>Created structured academic documents and materials while providing clear, patient communication and individualized support to students.</li>
+                </ul>
+              </div>
             </div>
           </article>
 
@@ -300,8 +339,9 @@
             </div>
 
             <div>
-              <h3 class="timeline-title">Assistant Trainer</h3>
-              <div class="timeline-org">CamelCodeQA · AI, robotics &amp; game development</div>
+              <h3 class="timeline-title"><a href="https://camelcodeqa.com/team" target="_blank" rel="noreferrer">Assistant Trainer<span class="title-link-arrow" aria-hidden="true">↗</span></a></h3>
+              <div class="timeline-org">CamelCodeQA · Education City, Qatar · AI, robotics &amp; game development</div>
+              <span class="timeline-date">2024 – 2026</span>
               <ul class="timeline-list">
                 <li>Delivered technology training programs for children covering AI, robotics, and game development fundamentals.</li>
                 <li>Mentored 20+ students through hands-on programming projects, strengthening problem-solving and computational thinking.</li>
@@ -325,13 +365,13 @@
           <article class="edu-card reveal">
             <div class="edu-kicker">Qatar University · Qatar</div>
             <h3 class="edu-title">Bachelor of Science in Computer Engineering</h3>
-            <div class="edu-meta">GPA 3.6 / 4.0 · Dean’s List 2023–2025</div>
+            <div class="edu-meta">2022 – 2026 · GPA 3.6 / 4.0 · Dean’s List 2023–2025</div>
           </article>
 
           <article class="edu-card reveal">
             <div class="edu-kicker">Qatar Secondary Education</div>
             <h3 class="edu-title">Highest Academic Distinction</h3>
-            <div class="edu-meta">Graduated with a 99.75% result.</div>
+            <div class="edu-meta">Graduated with a 99.75% result in 2022.</div>
           </article>
         </div>
       </div>
@@ -349,41 +389,41 @@
           <div class="skills-marquee-track" id="skillsMarqueeTrack">
             <div class="skill-marquee-set">
               <!-- AI / LLM stack -->
-              <div class="skill-marquee-item"><div class="skill-marquee-icon"><img src="certification-icons/claude-icon.png" alt="Claude logo" /></div><span class="skill-marquee-name">Claude</span></div>
-              <div class="skill-marquee-item"><div class="skill-marquee-icon"><img src="skill-icons/ollama.png" alt="Ollama logo" /></div><span class="skill-marquee-name">Ollama</span></div>
-              <div class="skill-marquee-item"><div class="skill-marquee-icon"><img src="skill-icons/vllm.png" alt="vLLM logo" /></div><span class="skill-marquee-name">vLLM</span></div>
-              <div class="skill-marquee-item"><div class="skill-marquee-icon"><img src="skill-icons/hugging-face.png" alt="Hugging Face logo" /></div><span class="skill-marquee-name">Hugging Face</span></div>
-              <div class="skill-marquee-item"><div class="skill-marquee-icon"><img src="skill-icons/langgraph.png" alt="LangGraph logo" /></div><span class="skill-marquee-name">LangGraph</span></div>
-              <div class="skill-marquee-item"><div class="skill-marquee-icon"><img src="skill-icons/google-colab.png" alt="Google Colab logo" /></div><span class="skill-marquee-name">Google Colab</span></div>
+              <div class="skill-marquee-item"><div class="skill-marquee-icon"><img src="certification-icons/claude-icon.png" alt="Claude logo" width="54" height="54" loading="lazy" decoding="async" /></div><span class="skill-marquee-name">Claude</span></div>
+              <div class="skill-marquee-item"><div class="skill-marquee-icon"><img src="skill-icons/ollama.png" alt="Ollama logo" width="54" height="54" loading="lazy" decoding="async" /></div><span class="skill-marquee-name">Ollama</span></div>
+              <div class="skill-marquee-item"><div class="skill-marquee-icon"><img src="skill-icons/vllm.png" alt="vLLM logo" width="54" height="54" loading="lazy" decoding="async" /></div><span class="skill-marquee-name">vLLM</span></div>
+              <div class="skill-marquee-item"><div class="skill-marquee-icon"><img src="skill-icons/hugging-face.png" alt="Hugging Face logo" width="54" height="54" loading="lazy" decoding="async" /></div><span class="skill-marquee-name">Hugging Face</span></div>
+              <div class="skill-marquee-item"><div class="skill-marquee-icon"><img src="skill-icons/langgraph.png" alt="LangGraph logo" width="54" height="54" loading="lazy" decoding="async" /></div><span class="skill-marquee-name">LangGraph</span></div>
+              <div class="skill-marquee-item"><div class="skill-marquee-icon"><img src="skill-icons/google-colab.png" alt="Google Colab logo" width="54" height="54" loading="lazy" decoding="async" /></div><span class="skill-marquee-name">Google Colab</span></div>
 
               <!-- Automation / development -->
-              <div class="skill-marquee-item"><div class="skill-marquee-icon"><img src="skill-icons/n8n.png" alt="n8n logo" /></div><span class="skill-marquee-name">n8n</span></div>
-              <div class="skill-marquee-item"><div class="skill-marquee-icon"><img src="skill-icons/github.png" alt="GitHub logo" /></div><span class="skill-marquee-name">GitHub</span></div>
-              <div class="skill-marquee-item"><div class="skill-marquee-icon"><img src="skill-icons/docker.png" alt="Docker logo" /></div><span class="skill-marquee-name">Docker</span></div>
+              <div class="skill-marquee-item"><div class="skill-marquee-icon"><img src="skill-icons/n8n.png" alt="n8n logo" width="54" height="54" loading="lazy" decoding="async" /></div><span class="skill-marquee-name">n8n</span></div>
+              <div class="skill-marquee-item"><div class="skill-marquee-icon"><img src="skill-icons/github.png" alt="GitHub logo" width="54" height="54" loading="lazy" decoding="async" /></div><span class="skill-marquee-name">GitHub</span></div>
+              <div class="skill-marquee-item"><div class="skill-marquee-icon"><img src="skill-icons/docker.png" alt="Docker logo" width="54" height="54" loading="lazy" decoding="async" /></div><span class="skill-marquee-name">Docker</span></div>
 
               <!-- Networking / embedded systems -->
-              <div class="skill-marquee-item"><div class="skill-marquee-icon"><img src="skill-icons/cisco-packet-tracer.png" alt="Cisco Packet Tracer logo" /></div><span class="skill-marquee-name">Cisco Packet Tracer</span></div>
-              <div class="skill-marquee-item"><div class="skill-marquee-icon"><img src="skill-icons/arduino.png" alt="Arduino logo" /></div><span class="skill-marquee-name">Arduino</span></div>
-              <div class="skill-marquee-item"><div class="skill-marquee-icon"><img src="skill-icons/raspberry-pi.png" alt="Raspberry Pi logo" /></div><span class="skill-marquee-name">Raspberry Pi</span></div>
+              <div class="skill-marquee-item"><div class="skill-marquee-icon"><img src="skill-icons/cisco-packet-tracer.png" alt="Cisco Packet Tracer logo" width="54" height="54" loading="lazy" decoding="async" /></div><span class="skill-marquee-name">Cisco Packet Tracer</span></div>
+              <div class="skill-marquee-item"><div class="skill-marquee-icon"><img src="skill-icons/arduino.png" alt="Arduino logo" width="54" height="54" loading="lazy" decoding="async" /></div><span class="skill-marquee-name">Arduino</span></div>
+              <div class="skill-marquee-item"><div class="skill-marquee-icon"><img src="skill-icons/raspberry-pi.png" alt="Raspberry Pi logo" width="54" height="54" loading="lazy" decoding="async" /></div><span class="skill-marquee-name">Raspberry Pi</span></div>
             </div>
             <div class="skill-marquee-set" aria-hidden="true">
               <!-- AI / LLM stack -->
-              <div class="skill-marquee-item"><div class="skill-marquee-icon"><img src="certification-icons/claude-icon.png" alt="" /></div><span class="skill-marquee-name">Claude</span></div>
-              <div class="skill-marquee-item"><div class="skill-marquee-icon"><img src="skill-icons/ollama.png" alt="" /></div><span class="skill-marquee-name">Ollama</span></div>
-              <div class="skill-marquee-item"><div class="skill-marquee-icon"><img src="skill-icons/vllm.png" alt="" /></div><span class="skill-marquee-name">vLLM</span></div>
-              <div class="skill-marquee-item"><div class="skill-marquee-icon"><img src="skill-icons/hugging-face.png" alt="" /></div><span class="skill-marquee-name">Hugging Face</span></div>
-              <div class="skill-marquee-item"><div class="skill-marquee-icon"><img src="skill-icons/langgraph.png" alt="" /></div><span class="skill-marquee-name">LangGraph</span></div>
-              <div class="skill-marquee-item"><div class="skill-marquee-icon"><img src="skill-icons/google-colab.png" alt="" /></div><span class="skill-marquee-name">Google Colab</span></div>
+              <div class="skill-marquee-item"><div class="skill-marquee-icon"><img src="certification-icons/claude-icon.png" alt="" width="54" height="54" loading="lazy" decoding="async" /></div><span class="skill-marquee-name">Claude</span></div>
+              <div class="skill-marquee-item"><div class="skill-marquee-icon"><img src="skill-icons/ollama.png" alt="" width="54" height="54" loading="lazy" decoding="async" /></div><span class="skill-marquee-name">Ollama</span></div>
+              <div class="skill-marquee-item"><div class="skill-marquee-icon"><img src="skill-icons/vllm.png" alt="" width="54" height="54" loading="lazy" decoding="async" /></div><span class="skill-marquee-name">vLLM</span></div>
+              <div class="skill-marquee-item"><div class="skill-marquee-icon"><img src="skill-icons/hugging-face.png" alt="" width="54" height="54" loading="lazy" decoding="async" /></div><span class="skill-marquee-name">Hugging Face</span></div>
+              <div class="skill-marquee-item"><div class="skill-marquee-icon"><img src="skill-icons/langgraph.png" alt="" width="54" height="54" loading="lazy" decoding="async" /></div><span class="skill-marquee-name">LangGraph</span></div>
+              <div class="skill-marquee-item"><div class="skill-marquee-icon"><img src="skill-icons/google-colab.png" alt="" width="54" height="54" loading="lazy" decoding="async" /></div><span class="skill-marquee-name">Google Colab</span></div>
 
               <!-- Automation / development -->
-              <div class="skill-marquee-item"><div class="skill-marquee-icon"><img src="skill-icons/n8n.png" alt="" /></div><span class="skill-marquee-name">n8n</span></div>
-              <div class="skill-marquee-item"><div class="skill-marquee-icon"><img src="skill-icons/github.png" alt="" /></div><span class="skill-marquee-name">GitHub</span></div>
-              <div class="skill-marquee-item"><div class="skill-marquee-icon"><img src="skill-icons/docker.png" alt="" /></div><span class="skill-marquee-name">Docker</span></div>
+              <div class="skill-marquee-item"><div class="skill-marquee-icon"><img src="skill-icons/n8n.png" alt="" width="54" height="54" loading="lazy" decoding="async" /></div><span class="skill-marquee-name">n8n</span></div>
+              <div class="skill-marquee-item"><div class="skill-marquee-icon"><img src="skill-icons/github.png" alt="" width="54" height="54" loading="lazy" decoding="async" /></div><span class="skill-marquee-name">GitHub</span></div>
+              <div class="skill-marquee-item"><div class="skill-marquee-icon"><img src="skill-icons/docker.png" alt="" width="54" height="54" loading="lazy" decoding="async" /></div><span class="skill-marquee-name">Docker</span></div>
 
               <!-- Networking / embedded systems -->
-              <div class="skill-marquee-item"><div class="skill-marquee-icon"><img src="skill-icons/cisco-packet-tracer.png" alt="" /></div><span class="skill-marquee-name">Cisco Packet Tracer</span></div>
-              <div class="skill-marquee-item"><div class="skill-marquee-icon"><img src="skill-icons/arduino.png" alt="" /></div><span class="skill-marquee-name">Arduino</span></div>
-              <div class="skill-marquee-item"><div class="skill-marquee-icon"><img src="skill-icons/raspberry-pi.png" alt="" /></div><span class="skill-marquee-name">Raspberry Pi</span></div>
+              <div class="skill-marquee-item"><div class="skill-marquee-icon"><img src="skill-icons/cisco-packet-tracer.png" alt="" width="54" height="54" loading="lazy" decoding="async" /></div><span class="skill-marquee-name">Cisco Packet Tracer</span></div>
+              <div class="skill-marquee-item"><div class="skill-marquee-icon"><img src="skill-icons/arduino.png" alt="" width="54" height="54" loading="lazy" decoding="async" /></div><span class="skill-marquee-name">Arduino</span></div>
+              <div class="skill-marquee-item"><div class="skill-marquee-icon"><img src="skill-icons/raspberry-pi.png" alt="" width="54" height="54" loading="lazy" decoding="async" /></div><span class="skill-marquee-name">Raspberry Pi</span></div>
             </div>
           </div>
         </div>
@@ -395,7 +435,7 @@
           </div>
           <div class="skill reveal">
             <strong>Tools &amp; Frameworks</strong>
-            <span>Claude Code, LangChain, LlamaIndex (RAG), Ollama, n8n, Apple Shortcuts, FastAPI, Cisco Packet Tracer, Docker, Google Colab</span>
+            <span>Claude Code, LangChain, LlamaIndex (RAG), n8n, Apple Shortcuts, FastAPI, Cisco Packet Tracer, Docker, Google Colab</span>
           </div>
           <div class="skill reveal">
             <strong>Hardware &amp; IoT</strong>
@@ -407,7 +447,7 @@
           </div>
           <div class="skill reveal">
             <strong>Other Skills</strong>
-            <span>Fast typing, Microsoft Office (Advanced), video editing, Photoshop, AI agents, workflow automation, Odoo</span>
+            <span>Fast typing, Microsoft Office (Advanced), video editing, Photoshop, AI agents, Odoo</span>
           </div>
         </div>
       </div>
@@ -422,38 +462,38 @@
         </div>
 
         <div class="certs stagger">
-          <a class="cert reveal" href="https://qucloud-my.sharepoint.com/:b:/g/personal/fm2208253_qu_edu_qa/EVoCHYBL3FdCmEbZLXxaWIABNGDcSKaPBRKDhQU2soJ9_g?e=DXePt9" target="_blank" rel="noreferrer">
-            <span class="cert-provider cert-provider-image cert-coursera-image" aria-hidden="true"><img src="certification-icons/coursera-icon.png" alt=""></span><span class="cert-title">Technical Support Fundamentals — Coursera</span><span class="cert-arrow">↗</span>
-          </a>
-          <a class="cert reveal" href="https://qucloud-my.sharepoint.com/:b:/g/personal/fm2208253_qu_edu_qa/IQB6rjENveLQTq1uLPNKoXX7AWnYC4oWEUtZix1P6DF_TP8?e=rYaPNw" target="_blank" rel="noreferrer">
-            <span class="cert-provider cert-provider-image" aria-hidden="true"><img src="certification-icons/claude-icon.png" alt=""></span><span class="cert-title">Claude 101 — Anthropic</span><span class="cert-arrow">↗</span>
-          </a>
-          <a class="cert reveal" href="https://qucloud-my.sharepoint.com/:b:/g/personal/fm2208253_qu_edu_qa/IQB4r2pp7K03QrRFZCqIJvwDAdEwFG9hD5Xsw85_kGug4dA?e=QTJBUX" target="_blank" rel="noreferrer">
-            <span class="cert-provider cert-provider-image" aria-hidden="true"><img src="certification-icons/claude-icon.png" alt=""></span><span class="cert-title">Claude Code 101 — Anthropic</span><span class="cert-arrow">↗</span>
-          </a>
           <a class="cert reveal" href="https://qucloud-my.sharepoint.com/:b:/g/personal/fm2208253_qu_edu_qa/IQB6L7N4NcpNRrmlaDKxAcgjARMs1sNiyL0Jr2_nhtwzjSs?e=g4adeJ" target="_blank" rel="noreferrer">
-            <span class="cert-provider cert-provider-image" aria-hidden="true"><img src="certification-icons/claude-icon.png" alt=""></span><span class="cert-title">Claude Code in Action — Anthropic</span><span class="cert-arrow">↗</span>
+            <span class="cert-provider cert-provider-image" aria-hidden="true"><img src="certification-icons/claude-icon.png" alt="" width="32" height="32" loading="lazy" decoding="async"></span><span class="cert-title">Claude Code in Action — Anthropic<span class="cert-date">Issued Aug 2026</span></span><span class="cert-arrow">↗</span>
           </a>
           <a class="cert reveal" href="https://qucloud-my.sharepoint.com/:b:/g/personal/fm2208253_qu_edu_qa/IQCBAJtUqiZwSolrI1I_FrojAejjJ1O9dO6pNGt73l4EbO0?e=OnKpRd" target="_blank" rel="noreferrer">
-            <span class="cert-provider cert-provider-image" aria-hidden="true"><img src="certification-icons/claude-icon.png" alt=""></span><span class="cert-title">Introduction to Model Context Protocol — Anthropic</span><span class="cert-arrow">↗</span>
+            <span class="cert-provider cert-provider-image" aria-hidden="true"><img src="certification-icons/claude-icon.png" alt="" width="32" height="32" loading="lazy" decoding="async"></span><span class="cert-title">Introduction to Model Context Protocol — Anthropic<span class="cert-date">Issued Aug 2026</span></span><span class="cert-arrow">↗</span>
+          </a>
+          <a class="cert reveal" href="https://qucloud-my.sharepoint.com/:b:/g/personal/fm2208253_qu_edu_qa/IQB4r2pp7K03QrRFZCqIJvwDAdEwFG9hD5Xsw85_kGug4dA?e=QTJBUX" target="_blank" rel="noreferrer">
+            <span class="cert-provider cert-provider-image" aria-hidden="true"><img src="certification-icons/claude-icon.png" alt="" width="32" height="32" loading="lazy" decoding="async"></span><span class="cert-title">Claude Code 101 — Anthropic<span class="cert-date">Issued Aug 2026</span></span><span class="cert-arrow">↗</span>
           </a>
           <a class="cert reveal" href="https://qucloud-my.sharepoint.com/:b:/g/personal/fm2208253_qu_edu_qa/IQCGw_pCoHuoQZtBpTr2Sh8sASEV7M08ByPvZUcd6UiGeF8?e=jSMRMS" target="_blank" rel="noreferrer">
-            <span class="cert-provider cert-provider-image" aria-hidden="true"><img src="certification-icons/claude-icon.png" alt=""></span><span class="cert-title">AI Fluency: Framework &amp; Foundations — Anthropic</span><span class="cert-arrow">↗</span>
+            <span class="cert-provider cert-provider-image" aria-hidden="true"><img src="certification-icons/claude-icon.png" alt="" width="32" height="32" loading="lazy" decoding="async"></span><span class="cert-title">AI Fluency: Framework &amp; Foundations — Anthropic<span class="cert-date">Issued Aug 2026</span></span><span class="cert-arrow">↗</span>
+          </a>
+          <a class="cert reveal" href="https://qucloud-my.sharepoint.com/:b:/g/personal/fm2208253_qu_edu_qa/IQB6rjENveLQTq1uLPNKoXX7AWnYC4oWEUtZix1P6DF_TP8?e=rYaPNw" target="_blank" rel="noreferrer">
+            <span class="cert-provider cert-provider-image" aria-hidden="true"><img src="certification-icons/claude-icon.png" alt="" width="32" height="32" loading="lazy" decoding="async"></span><span class="cert-title">Claude 101 — Anthropic<span class="cert-date">Issued Aug 2026</span></span><span class="cert-arrow">↗</span>
           </a>
           <a class="cert reveal" href="https://qucloud-my.sharepoint.com/:b:/g/personal/fm2208253_qu_edu_qa/IQCKLmZg98h3RZMFhntouMQ7ARe-5JLcDTrp7l3ZqMyUEUU?e=g2Ejaj" target="_blank" rel="noreferrer">
-            <span class="cert-provider cert-provider-image" aria-hidden="true"><img src="certification-icons/cisco-icon.png" alt=""></span><span class="cert-title">CCNA Introduction to Networks — Cisco</span><span class="cert-arrow">↗</span>
-          </a>
-          <a class="cert reveal" href="https://qucloud-my.sharepoint.com/:b:/g/personal/fm2208253_qu_edu_qa/ERb3ydv_nXtJo8a51kddzwIBpK84DnlpG8Sr5luSEtYSZw?e=Lvj6bG" target="_blank" rel="noreferrer">
-            <span class="cert-provider cert-provider-image" aria-hidden="true"><img src="certification-icons/udemy-icon.png" alt=""></span><span class="cert-title">Pricing Fundamentals — Dr. Ihab Mousallam</span><span class="cert-arrow">↗</span>
-          </a>
-          <a class="cert reveal" href="https://qucloud-my.sharepoint.com/:b:/g/personal/fm2208253_qu_edu_qa/EU-OE307kc5DtvmcdCWt308BpALPR68xRzVVdxhOcTVLAA?e=lffi4q" target="_blank" rel="noreferrer">
-            <span class="cert-provider cert-provider-image" aria-hidden="true"><img src="certification-icons/udemy-icon.png" alt=""></span><span class="cert-title">SWOT Analysis — Dr. Ihab Mousallam</span><span class="cert-arrow">↗</span>
+            <span class="cert-provider cert-provider-image" aria-hidden="true"><img src="certification-icons/cisco-icon.png" alt="" width="32" height="32" loading="lazy" decoding="async"></span><span class="cert-title">CCNA: Introduction to Networks — Cisco<span class="cert-date">Issued Dec 2024</span></span><span class="cert-arrow">↗</span>
           </a>
           <a class="cert reveal" href="https://qucloud-my.sharepoint.com/:b:/g/personal/fm2208253_qu_edu_qa/EZ7y7XsmirJIlwxSdP7LcrwBl3K280J2jSu_OzgZZvw82Q?e=3JXEpW" target="_blank" rel="noreferrer">
-            <span class="cert-provider cert-provider-image" aria-hidden="true"><img src="certification-icons/udemy-icon.png" alt=""></span><span class="cert-title">Effective Sales Skills — Dr. Ihab Mousallam</span><span class="cert-arrow">↗</span>
+            <span class="cert-provider cert-provider-image" aria-hidden="true"><img src="certification-icons/udemy-icon.png" alt="" width="32" height="32" loading="lazy" decoding="async"></span><span class="cert-title">Effective Sales Skills — Dr. Ehab Muslim<span class="cert-date">Issued Apr 2021</span></span><span class="cert-arrow">↗</span>
+          </a>
+          <a class="cert reveal" href="https://qucloud-my.sharepoint.com/:b:/g/personal/fm2208253_qu_edu_qa/EVoCHYBL3FdCmEbZLXxaWIABNGDcSKaPBRKDhQU2soJ9_g?e=DXePt9" target="_blank" rel="noreferrer">
+            <span class="cert-provider cert-provider-image cert-coursera-image" aria-hidden="true"><img src="certification-icons/coursera-icon.png" alt="" width="32" height="32" loading="lazy" decoding="async"></span><span class="cert-title">Technical Support Fundamentals — Coursera<span class="cert-date">Issued Sep 2020</span></span><span class="cert-arrow">↗</span>
+          </a>
+          <a class="cert reveal" href="https://qucloud-my.sharepoint.com/:b:/g/personal/fm2208253_qu_edu_qa/EU-OE307kc5DtvmcdCWt308BpALPR68xRzVVdxhOcTVLAA?e=lffi4q" target="_blank" rel="noreferrer">
+            <span class="cert-provider cert-provider-image" aria-hidden="true"><img src="certification-icons/udemy-icon.png" alt="" width="32" height="32" loading="lazy" decoding="async"></span><span class="cert-title">SWOT Analysis — Dr. Ehab Muslim<span class="cert-date">Issued Sep 2020</span></span><span class="cert-arrow">↗</span>
+          </a>
+          <a class="cert reveal" href="https://qucloud-my.sharepoint.com/:b:/g/personal/fm2208253_qu_edu_qa/ERb3ydv_nXtJo8a51kddzwIBpK84DnlpG8Sr5luSEtYSZw?e=Lvj6bG" target="_blank" rel="noreferrer">
+            <span class="cert-provider cert-provider-image" aria-hidden="true"><img src="certification-icons/udemy-icon.png" alt="" width="32" height="32" loading="lazy" decoding="async"></span><span class="cert-title">Pricing Fundamentals — Dr. Ehab Muslim<span class="cert-date">Issued Jul 2020</span></span><span class="cert-arrow">↗</span>
           </a>
           <a class="cert reveal" href="https://qucloud-my.sharepoint.com/:b:/g/personal/fm2208253_qu_edu_qa/ERPH9zLQdkJAguhdhYeEQs0B5GhPPmHODz4qxseqB-ka7A?e=GfgJW7" target="_blank" rel="noreferrer">
-            <span class="cert-provider cert-provider-image cert-google-image" aria-hidden="true"><img src="certification-icons/google-icon.png" alt=""></span><span class="cert-title">Google Digital Skills Program — Google Skills</span><span class="cert-arrow">↗</span>
+            <span class="cert-provider cert-provider-image" aria-hidden="true"><img src="certification-icons/google-icon.png" alt="" width="32" height="32" loading="lazy" decoding="async"></span><span class="cert-title">Google Digital Skills Program — Google Skills<span class="cert-date">Issued May 2020</span></span><span class="cert-arrow">↗</span>
           </a>
         </div>
       </div>
@@ -499,11 +539,10 @@
         <footer>
           <span>© <span id="year"></span> Fekry Mansour</span>
           <span>Doha, Qatar · Computer Engineer · AI Engineer</span>
+          <span class="privacy-note">This site records basic visit statistics (device, browser, approximate location) to understand its audience.</span>
         </footer>
       </div>
     </section>
   </main>
-  <script src="data.js" defer></script>
-  <script src="chatbot.js" defer></script>
-  <script src="main.js" defer></script>
 </body>
+</html>

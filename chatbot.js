@@ -127,6 +127,10 @@ const PORTFOLIO_TERMS = [
   /\blicenses?\b/i,
   /\bqatar\s+university\b/i,
   /\bcamelcodeqa?\b/i,
+  /\bspecial\s+needs\b/i,
+  /\bnote-?taking\b/i,
+  /\binstructor\s+assistant\b/i,
+  /\btrainer\b/i,
   /\bclaude\b/i,
   /\bfanar\b/i,
   /\bfitness\b/i,
@@ -352,8 +356,52 @@ function showError(message) {
   renderRichText(messageNode, message);
 }
 
+/*
+ * Fast-typing reveal (as in v17): the answer is rendered first so links,
+ * bold text, and lists keep working, then its text is typed back in at
+ * roughly 10 ms per character.
+ */
+const TYPING_MS_PER_CHAR = 10;
+
+function typeAssistantLine(content) {
+  const { message } = addAssistantLine("assistant", content);
+  const reduceMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+  if (reduceMotion) return Promise.resolve();
+
+  const walker = document.createTreeWalker(message, NodeFilter.SHOW_TEXT);
+  const nodes = [];
+  while (walker.nextNode()) nodes.push({ node: walker.currentNode, text: walker.currentNode.nodeValue });
+  nodes.forEach((item) => { item.node.nodeValue = ""; });
+
+  const total = nodes.reduce((sum, item) => sum + item.text.length, 0);
+  message.classList.add("typing");
+
+  return new Promise((resolve) => {
+    const start = performance.now();
+
+    const step = (now) => {
+      let remaining = Math.min(total, Math.floor((now - start) / TYPING_MS_PER_CHAR) + 1);
+      for (const item of nodes) {
+        const shown = Math.min(item.text.length, remaining);
+        item.node.nodeValue = item.text.slice(0, shown);
+        remaining -= shown;
+      }
+      assistantOutput.scrollTop = assistantOutput.scrollHeight;
+
+      if (Math.floor((now - start) / TYPING_MS_PER_CHAR) + 1 < total) {
+        requestAnimationFrame(step);
+      } else {
+        message.classList.remove("typing");
+        resolve();
+      }
+    };
+
+    requestAnimationFrame(step);
+  });
+}
+
 function showLocalResponse(text) {
-  addAssistantLine("assistant", text);
+  return typeAssistantLine(text);
 }
 
 function isPromptInjection(text) {
@@ -472,13 +520,14 @@ async function sendChatMessage(rawText) {
 
   const localResponse = getLocalGuardrailResponse(text);
   if (localResponse) {
-    showLocalResponse(localResponse);
-
     // Locally handled questions should not pollute the provider context.
     if (chatHistory.at(-1)?.role === "user") {
       chatHistory.pop();
     }
 
+    setAssistantBusy(true);
+    await showLocalResponse(localResponse);
+    setAssistantBusy(false);
     assistantInput.focus();
     return;
   }
@@ -524,16 +573,17 @@ async function sendChatMessage(rawText) {
 
     if (containsPromptLeak(reply)) {
       thinkingLine.remove();
-      showLocalResponse("I can answer questions about Fekry's public professional profile, but I won't reveal hidden instructions, system prompts, or internal configuration.");
       if (chatHistory.at(-1)?.role === "user") {
         chatHistory.pop();
       }
+      await showLocalResponse("I can answer questions about Fekry's public professional profile, but I won't reveal hidden instructions, system prompts, or internal configuration.");
       return;
     }
 
     thinkingLine.remove();
-    addAssistantLine("assistant", reply);
     chatHistory.push({ role: "assistant", content: reply });
+    window.clearTimeout(timeoutId);
+    await typeAssistantLine(reply);
   } catch (error) {
     thinkingLine.remove();
 

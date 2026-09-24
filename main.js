@@ -1,6 +1,7 @@
 /* ============================================================
    main.js
-   Navigation, scrollspy, page motion, hero title, and skills rail.
+   Navigation, scrollspy, scroll progress, reveal motion,
+   skills rail, and on-demand loading of the AI assistant.
    ============================================================ */
 
 const $ = (id) => document.getElementById(id);
@@ -12,10 +13,20 @@ const navSections = [...document.querySelectorAll("[data-section]")];
 const navToggle = $("navToggle");
 const navScrim = $("navScrim");
 const scrollProgressBar = $("scrollProgressBar");
-let currentSectionId = "home";
-let navShiftTimer;
-let scrollSpyRaf = 0;
-let progressRaf = 0;
+let currentSectionId = "";
+let scrollRaf = 0;
+
+/* Section offsets are measured once and refreshed only when the layout changes,
+   so scrolling never forces a layout read of every section. */
+let sectionTops = [];
+let maxScroll = 1;
+let headerHeight = 0;
+
+function measureLayout() {
+  headerHeight = nav ? nav.offsetHeight : 0;
+  sectionTops = navSections.map((section) => section.getBoundingClientRect().top + window.scrollY);
+  maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+}
 
 function setMobileMenu(open) {
   if (!nav || !navToggle) return;
@@ -30,16 +41,8 @@ function setMobileMenu(open) {
   navScrim?.setAttribute("aria-hidden", String(!open));
 }
 
-function positionActiveMenuItem() {
-  if (window.innerWidth > 700) return;
-  const active = navLinks.find((link) => link.classList.contains("active"));
-  if (active && nav.classList.contains("menu-open")) {
-    active.scrollIntoView({ block: "nearest" });
-  }
-}
-
-function setActiveSection(id, animate = true) {
-  const changed = currentSectionId !== id;
+function setActiveSection(id) {
+  if (currentSectionId === id) return;
   currentSectionId = id;
 
   navLinks.forEach((link) => {
@@ -48,52 +51,30 @@ function setActiveSection(id, animate = true) {
     if (active) link.setAttribute("aria-current", "location");
     else link.removeAttribute("aria-current");
   });
-
-  if (changed && animate && id !== "home") {
-    nav.classList.remove("section-shift");
-    void nav.offsetWidth;
-    nav.classList.add("section-shift");
-    clearTimeout(navShiftTimer);
-    navShiftTimer = setTimeout(() => nav.classList.remove("section-shift"), 560);
-  }
-
-  positionActiveMenuItem();
 }
 
-function updateScrollSpy() {
-  scrollSpyRaf = 0;
-  const headerHeight = nav ? nav.getBoundingClientRect().height : 0;
-  const probeY = window.scrollY + headerHeight + 35;
-  let nextSection = "home";
+function onScrollFrame() {
+  scrollRaf = 0;
+  const y = window.scrollY;
 
-  for (const section of navSections) {
-    const top = section.getBoundingClientRect().top + window.scrollY;
-    if (top <= probeY) nextSection = section.id;
+  nav?.classList.toggle("scrolled", y > 20);
+
+  const probeY = y + headerHeight + 35;
+  let nextSection = "home";
+  for (let i = 0; i < sectionTops.length; i += 1) {
+    if (sectionTops[i] <= probeY) nextSection = navSections[i].id;
     else break;
   }
-
-  const nearBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 8;
-  if (nearBottom && navSections.length) nextSection = navSections[navSections.length - 1].id;
-
+  if (y >= maxScroll - 8 && navSections.length) nextSection = navSections[navSections.length - 1].id;
   setActiveSection(nextSection);
+
+  if (scrollProgressBar) {
+    scrollProgressBar.style.transform = `scaleX(${Math.min(1, Math.max(0, y / maxScroll))})`;
+  }
 }
 
-function queueScrollSpy() {
-  if (scrollSpyRaf) return;
-  scrollSpyRaf = requestAnimationFrame(updateScrollSpy);
-}
-
-function updateScrollProgress() {
-  progressRaf = 0;
-  if (!scrollProgressBar) return;
-  const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
-  const ratio = Math.min(1, Math.max(0, window.scrollY / maxScroll));
-  scrollProgressBar.style.transform = `scaleX(${ratio})`;
-}
-
-function queueScrollProgress() {
-  if (progressRaf) return;
-  progressRaf = requestAnimationFrame(updateScrollProgress);
+function queueScrollFrame() {
+  if (!scrollRaf) scrollRaf = requestAnimationFrame(onScrollFrame);
 }
 
 navToggle?.addEventListener("click", (event) => {
@@ -105,7 +86,7 @@ navScrim?.addEventListener("click", () => setMobileMenu(false));
 navLinks.forEach((link) => {
   link.addEventListener("click", () => {
     const id = link.getAttribute("href")?.slice(1);
-    if (id) setActiveSection(id, false);
+    if (id) setActiveSection(id);
     setMobileMenu(false);
   });
 });
@@ -119,74 +100,52 @@ document.addEventListener("keydown", (event) => {
   if (event.key === "Escape") setMobileMenu(false);
 });
 
-window.addEventListener("scroll", () => {
-  nav?.classList.toggle("scrolled", window.scrollY > 20);
-  queueScrollSpy();
-  queueScrollProgress();
-}, { passive: true });
+window.addEventListener("scroll", queueScrollFrame, { passive: true });
 
 window.addEventListener("resize", () => {
   if (window.innerWidth > 700) setMobileMenu(false);
-  queueScrollSpy();
-  queueScrollProgress();
 }, { passive: true });
 
+// Re-measure whenever the page height changes (images loading, resize, chat output growing).
+if ("ResizeObserver" in window) {
+  new ResizeObserver(() => {
+    measureLayout();
+    queueScrollFrame();
+  }).observe(document.body);
+} else {
+  window.addEventListener("resize", () => { measureLayout(); queueScrollFrame(); }, { passive: true });
+  window.addEventListener("load", () => { measureLayout(); queueScrollFrame(); });
+}
+
 /* Reveal */
-const observer = new IntersectionObserver((entries) => {
+const revealObserver = new IntersectionObserver((entries) => {
   entries.forEach((entry) => {
     if (entry.isIntersecting) {
       entry.target.classList.add("visible");
-      observer.unobserve(entry.target);
+      revealObserver.unobserve(entry.target);
     }
   });
 }, { threshold: 0.08 });
 
-document.querySelectorAll(".reveal").forEach((el) => observer.observe(el));
+document.querySelectorAll(".reveal").forEach((el) => revealObserver.observe(el));
+
+/* Section accent line + pause looping animations while off-screen */
+const sectionObserver = new IntersectionObserver((entries) => {
+  entries.forEach((entry) => {
+    entry.target.classList.toggle("is-offscreen", !entry.isIntersecting);
+    if (entry.isIntersecting) entry.target.classList.add("is-visible");
+  });
+}, { threshold: 0 });
+
+navSections.forEach((section) => sectionObserver.observe(section));
 
 /* Year */
 const year = $("year");
 if (year) year.textContent = new Date().getFullYear();
 
-/* Animated hero title */
-const heroTitle = $("heroTitle");
-if (heroTitle) {
-  const heroText = heroTitle.getAttribute("aria-label") || "Fekry Mansour";
-  const words = heroText.split(/\s+/);
-  let letterIndex = 0;
-
-  words.forEach((word, wordIndex) => {
-    const wordWrap = document.createElement("span");
-    wordWrap.className = "hero-word";
-
-    [...word].forEach((char) => {
-      const span = document.createElement("span");
-      span.className = "hero-letter";
-      span.style.setProperty("--i", letterIndex++);
-      span.textContent = char;
-      wordWrap.appendChild(span);
-    });
-
-    heroTitle.appendChild(wordWrap);
-
-    if (wordIndex < words.length - 1) {
-      heroTitle.appendChild(document.createTextNode(" "));
-    }
-  });
-}
-
-/* Section accent reveal */
-const sectionObserver = new IntersectionObserver((entries) => {
-  entries.forEach((entry) => {
-    if (entry.isIntersecting) entry.target.classList.add("is-visible");
-  });
-}, { threshold: 0.12 });
-
-document.querySelectorAll("[data-section]").forEach((section) => sectionObserver.observe(section));
-
 /* Initial state */
-setActiveSection("home", false);
-queueScrollSpy();
-queueScrollProgress();
+measureLayout();
+onScrollFrame();
 
 /* Skills marquee: auto-scroll + pointer drag */
 const skillsMarquee = $("skillsMarquee");
@@ -250,7 +209,7 @@ if (skillsMarquee && skillsTrack) {
       const progress = Math.abs(normalized) / loop;
       skillsTrack.style.animationDelay = `${-Math.min(progress, 1) * 30}s`;
       requestAnimationFrame(() => {
-        skillsTrack.style.animationPlayState = "running";
+        skillsTrack.style.animationPlayState = "";
         skillsTrack.style.animationDelay = "";
       });
     }
@@ -264,3 +223,65 @@ if (skillsMarquee && skillsTrack) {
     if (dragging && event.pointerType === "mouse") onPointerUp(event);
   });
 }
+
+/* AI assistant: data.js + chatbot.js load after the page is idle, or immediately
+   on the first interaction, so they never compete with the first paint. */
+// Names here must not clash with the top-level constants declared in chatbot.js.
+const chatFormEl = $("assistantForm");
+const chatChipsEl = $("assistantPrompts");
+let chatLoadPromise = null;
+let chatReady = false;
+let pendingChatQuery = null;
+
+function loadScript(src) {
+  return new Promise((resolve, reject) => {
+    const script = document.createElement("script");
+    script.src = src;
+    script.onload = resolve;
+    script.onerror = reject;
+    document.body.appendChild(script);
+  });
+}
+
+function loadChat() {
+  chatLoadPromise ||= loadScript("data.js")
+    .then(() => loadScript("chatbot.js"))
+    .then(() => {
+      chatReady = true;
+      if (pendingChatQuery !== null && typeof sendChatMessage === "function") {
+        const query = pendingChatQuery;
+        pendingChatQuery = null;
+        sendChatMessage(query);
+      }
+    });
+  return chatLoadPromise;
+}
+
+// Until chatbot.js has loaded, hold the visitor's question and send it once ready.
+// After that these handlers step aside and chatbot.js's own listeners take over.
+function queueChatQuery(query) {
+  if (!query.trim()) return;
+  pendingChatQuery = query;
+  loadChat();
+}
+
+chatFormEl?.addEventListener("submit", (event) => {
+  if (chatReady) return;
+  event.preventDefault();
+  queueChatQuery($("assistantInput")?.value || "");
+});
+
+chatChipsEl?.addEventListener("click", (event) => {
+  if (chatReady) return;
+  const chip = event.target.closest("[data-query]");
+  if (chip) queueChatQuery(chip.dataset.query || "");
+});
+
+$("assistantInput")?.addEventListener("focus", loadChat, { once: true });
+
+const scheduleIdleChatLoad = () => {
+  const idle = window.requestIdleCallback || ((fn) => setTimeout(fn, 1500));
+  idle(loadChat, { timeout: 4000 });
+};
+if (document.readyState === "complete") scheduleIdleChatLoad();
+else window.addEventListener("load", scheduleIdleChatLoad, { once: true });

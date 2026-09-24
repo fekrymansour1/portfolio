@@ -34,7 +34,6 @@
       pointer-events:none;
       background:
         radial-gradient(circle at 8% 10%,rgba(54,88,255,.08),transparent 26%),
-        radial-gradient(circle at 90% 18%,rgba(239,79,154,.06),transparent 24%),
         radial-gradient(circle at 74% 86%,rgba(18,167,160,.05),transparent 22%);
       z-index:-3;
     }
@@ -54,22 +53,15 @@
       position:fixed;
       inset:0 0 auto 0;
       z-index:50;
-      background:rgba(246,244,238,.78);
-      backdrop-filter:blur(18px);
+      background:rgba(246,244,238,.86);
+      backdrop-filter:blur(12px);
+      -webkit-backdrop-filter:blur(12px);
       border-bottom:1px solid transparent;
-      transition:.3s ease;
+      transition:border-color .3s ease,box-shadow .3s ease;
     }
     .nav.scrolled{
       border-bottom-color:var(--line);
       box-shadow:0 12px 35px rgba(17,17,17,.05);
-    }
-    .nav.section-shift .nav-inner{
-      animation:navShift .5s cubic-bezier(.2,.7,.2,1);
-    }
-    @keyframes navShift{
-      0%{transform:translateY(-3px);opacity:.75}
-      55%{transform:translateY(1px);opacity:1}
-      100%{transform:translateY(0)}
     }
     .nav-inner{
       position:relative;
@@ -216,53 +208,12 @@
       padding:138px 0 92px;
       position:relative;
     }
-    .hero::before{
-      content:"";
-      position:absolute;
-      width:54vw;
-      height:54vw;
-      max-width:760px;
-      max-height:760px;
-      right:-19vw;
-      top:8vh;
-      border-radius:50%;
-      background:conic-gradient(
-        from 220deg,
-        rgba(54,88,255,.17),
-        rgba(239,79,154,.13),
-        rgba(245,200,76,.10),
-        rgba(18,167,160,.10),
-        rgba(54,88,255,.17)
-      );
-      filter:blur(48px);
-      animation:spinGlow 18s linear infinite;
-      z-index:-1;
-    }
-    @keyframes spinGlow{to{transform:rotate(360deg)}}
 
     .hero-grid{
       display:grid;
       grid-template-columns:minmax(0,1.22fr) minmax(320px,.78fr);
       gap:74px;
       align-items:center;
-    }
-
-    .eyebrow{
-      display:inline-flex;
-      align-items:center;
-      gap:10px;
-      margin-bottom:24px;
-      color:var(--muted);
-      font-size:12px;
-      font-weight:850;
-      letter-spacing:.14em;
-      text-transform:uppercase;
-    }
-    .eyebrow::before{
-      content:"";
-      width:38px;
-      height:2px;
-      background:linear-gradient(90deg,var(--blue),var(--pink));
     }
 
     h1{
@@ -282,12 +233,11 @@
       display:inline-block;
       opacity:0;
       transform:translateY(55px) rotate(4deg);
-      filter:blur(4px);
-      animation:heroLetter .75s cubic-bezier(.2,.7,.2,1) forwards;
-      animation-delay:calc(var(--i) * .025s);
+      animation:heroLetter .6s cubic-bezier(.2,.7,.2,1) forwards;
+      animation-delay:calc(var(--i) * .02s);
     }
     @keyframes heroLetter{
-      to{opacity:1;transform:none;filter:none}
+      to{opacity:1;transform:none}
     }
 
     .hero-role{
@@ -383,64 +333,59 @@
       stroke:none;
     }
 
-    .portrait-wrap{
-      justify-self:end;
-      width:min(450px,100%);
-      position:relative;
-      animation:portraitIn 1s .35s cubic-bezier(.2,.7,.2,1) both;
+    /* Phone number text only shows in the desktop contact column. */
+    .hero-link-full{display:none}
+
+    /* Hero side (desktop): labels and contact links stacked beside the name,
+       with no card behind them. Below 921px none of this applies, so the
+       phone layout is unchanged. */
+    @media (min-width:921px){
+      .hero-grid{
+        grid-template-columns:minmax(0,1fr) auto;
+        gap:48px;
+      }
+      .hero-side{
+        justify-self:end;
+        white-space:nowrap;
+        animation:heroSideIn .7s .3s cubic-bezier(.2,.7,.2,1) both;
+      }
+      .hero-side .hero-facts{
+        flex-direction:column;
+        align-items:flex-start;
+        margin-top:0;
+      }
+      .hero-side .fact{
+        font-size:14px;
+        line-height:1.3;
+      }
+      .hero-side .hero-links{
+        flex-direction:column;
+        align-items:flex-start;
+        margin-top:22px;
+      }
+      /* Contact links take the same pill shape as the labels above them. */
+      .hero-side .hero-link{
+        min-height:44px;
+        gap:10px;
+        padding:9px 16px 9px 13px;
+        border-radius:999px;
+        background:rgba(255,253,248,.68);
+        box-shadow:0 6px 24px rgba(20,20,20,.04);
+        font-size:14px;
+        font-weight:700;
+        line-height:1.3;
+      }
+      .hero-side .hero-link svg{width:19px;height:19px}
+      .hero-side .hero-link:hover{
+        transform:translateY(-2px);
+        background:#fffdf8;
+      }
+      .hero-side .hero-link-short{display:none}
+      .hero-side .hero-link-full{display:inline}
     }
-    @keyframes portraitIn{
-      from{opacity:0;transform:translateY(-26px)}
-      to{opacity:1;transform:translateY(-34px)}
-    }
-    .portrait-wrap::before{
-      content:"";
-      position:absolute;
-      inset:-16px 24px 24px -16px;
-      background:linear-gradient(135deg,var(--blue),var(--pink) 48%,var(--orange));
-      z-index:-1;
-      transform:rotate(-4deg);
-      border-radius:24px;
-      animation:floatCard 6s ease-in-out infinite;
-    }
-    .portrait-wrap::after{
-      content:"";
-      position:absolute;
-      inset:18px -20px -20px 18px;
-      border:1px solid rgba(54,88,255,.28);
-      z-index:-1;
-      transform:rotate(2.5deg);
-      border-radius:24px;
-    }
-    @keyframes floatCard{
-      50%{transform:rotate(-2deg) translateY(-10px)}
-    }
-    .portrait{
-      width:100%;
-      aspect-ratio:1/1;
-      object-fit:cover;
-      background:#fff;
-      border-radius:18px;
-      box-shadow:var(--shadow);
-      filter:saturate(.92) contrast(1.03);
-      transition:transform .5s ease,filter .4s ease;
-    }
-    .portrait-wrap:hover .portrait{
-      transform:translateY(-7px) scale(1.015);
-      filter:saturate(1) contrast(1.04);
-    }
-    .portrait-tag{
-      position:absolute;
-      left:-16px;
-      bottom:-16px;
-      background:var(--ink);
-      color:#fff;
-      padding:12px 16px;
-      font-size:12px;
-      font-weight:850;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-      box-shadow:10px 10px 0 var(--yellow);
+    @keyframes heroSideIn{
+      from{opacity:0;transform:translateY(18px)}
+      to{opacity:1;transform:none}
     }
 
     /* Sections: inspired by the reference's large editorial headings */
@@ -613,11 +558,46 @@
       line-height:1;
       letter-spacing:-.048em;
     }
+    .timeline-title a{
+      text-decoration:underline;
+      text-decoration-color:transparent;
+      text-decoration-thickness:2px;
+      text-underline-offset:5px;
+      transition:text-decoration-color .2s ease;
+    }
+    .timeline-title a:hover{text-decoration-color:var(--blue)}
+    /* Same ↗ mark as the certificate cards, scaled to the title text. */
+    .title-link-arrow{
+      display:inline-block;
+      margin-left:.22em;
+      color:var(--ink);
+      font-size:.7em;
+      font-weight:700;
+      line-height:1;
+      vertical-align:.24em;
+      transition:transform .2s ease;
+    }
+    .timeline-title a:hover .title-link-arrow{transform:translate(2px,-2px)}
     .timeline-org{
       margin-bottom:14px;
       color:var(--blue);
       font-size:14px;
       font-weight:800;
+    }
+    .timeline-date{
+      display:inline-block;
+      margin-bottom:12px;
+      padding:4px 10px;
+      border:1px solid var(--line);
+      border-radius:999px;
+      color:var(--muted);
+      font-size:12px;
+      font-weight:750;
+    }
+    .timeline-role + .timeline-role{
+      margin-top:26px;
+      padding-top:24px;
+      border-top:1px dashed var(--line);
     }
     .timeline-list{
       margin:0;
@@ -811,21 +791,8 @@
       letter-spacing:-.06em;
       box-shadow:inset 0 -4px 0 rgba(0,0,0,.12);
     }
-    .cert-provider span{display:block}
     .cert-provider-image{background:#fff;border:1px solid var(--line);box-shadow:none;padding:6px;overflow:hidden}
     .cert-provider-image img{width:100%;height:100%;display:block;object-fit:contain}
-    .cert-google-image{background:#fff}
-    .cert-anthropic{background:#111}
-    .cert-anthropic span{width:18px;height:18px;position:relative}
-    .cert-anthropic span::before,.cert-anthropic span::after{content:'';position:absolute;background:#fff;border-radius:3px}
-    .cert-anthropic span::before{width:5px;height:22px;left:7px;top:-2px;transform:rotate(45deg)}
-    .cert-anthropic span::after{width:22px;height:5px;left:-2px;top:7px;transform:rotate(45deg)}
-    .cert-cisco{background:#049fd9}
-    .cert-cisco span::before{content:'⌁';font-size:29px;line-height:1}
-    .cert-udemy{background:#a435f0}
-    .cert-udemy span::before{content:'U';font-size:22px}
-    .cert-google{background:#fff;border:1px solid var(--line);color:#4285f4;box-shadow:none}
-    .cert-google span::before{content:'G';font-size:23px}
 
     /* Certifications */
     .certs{
@@ -869,10 +836,19 @@
     .cert:hover::before{transform:scaleY(1)}
     .cert-provider + .cert-title{
       min-width:0;
+      flex:1 1 auto;
     }
     .cert-title{
       font-weight:780;
       letter-spacing:-.015em;
+    }
+    .cert-date{
+      display:block;
+      margin-top:3px;
+      color:var(--muted);
+      font-size:12px;
+      font-weight:650;
+      letter-spacing:0;
     }
     .cert-arrow{
       color:var(--accent);
@@ -980,21 +956,22 @@
       color:#fff !important;
       stroke:none;
     }
-    .cert-coursera-image{
-      background:#fff;
-      border:1px solid var(--line);
-      box-shadow:none;
-      padding:5px;
-    }
+    .cert-coursera-image{padding:5px}
 
     footer{
       display:flex;
+      flex-wrap:wrap;
       align-items:center;
       justify-content:space-between;
-      gap:18px;
+      gap:8px 18px;
       padding:22px 0 48px;
       color:var(--muted);
       font-size:12px;
+    }
+    .privacy-note{
+      flex-basis:100%;
+      color:var(--soft);
+      font-size:11px;
     }
 
     /* Fekry Intelligence — AI-powered, borderless, light assistant */
@@ -1045,7 +1022,6 @@
       -webkit-text-fill-color:transparent;
       color:transparent;
       animation:intelligenceGradient 4.5s linear infinite;
-      will-change:background-position;
       overflow:visible;
       padding-bottom:.12em;
     }
@@ -1213,17 +1189,19 @@
       .intelligence-title{animation:none;background-position:50% 50%}
       .assistant-chip,.assistant-submit,.assistant-input,.assistant-output-wrap,.assistant-prompts{transition:none}
       .assistant-message.typing::after{animation:none}
-      .chat-send,.chat-send svg{transition:none}
     }
 
+    /* Looping animations pause while their section is off-screen (set by main.js). */
+    .is-offscreen .intelligence-title,
+    .is-offscreen .skills-marquee-track{animation-play-state:paused}
 
-    /* Reveal / motion */
-    .reveal{
+    /* Reveal / motion — content stays visible if JavaScript never runs. */
+    .js .reveal{
       opacity:0;
-      transform:translateY(28px);
-      transition:opacity .8s cubic-bezier(.2,.7,.2,1),transform .8s cubic-bezier(.2,.7,.2,1);
+      transform:translateY(18px);
+      transition:opacity .55s cubic-bezier(.2,.7,.2,1),transform .55s cubic-bezier(.2,.7,.2,1);
     }
-    .reveal.visible{opacity:1;transform:none}
+    .js .reveal.visible{opacity:1;transform:none}
     .stagger>.reveal:nth-child(2){transition-delay:.06s}
     .stagger>.reveal:nth-child(3){transition-delay:.12s}
     .stagger>.reveal:nth-child(4){transition-delay:.18s}
@@ -1250,10 +1228,7 @@
       .contact-box{
         grid-template-columns:1fr;
       }
-      .portrait-wrap{
-        justify-self:start;
-        max-width:390px;
-      }
+      .hero-grid{row-gap:0}
       .timeline-item{
         grid-template-columns:1fr;
         gap:22px;
@@ -1282,15 +1257,13 @@
       .hero{
         padding:110px 0 80px;
       }
-      .hero-grid{gap:46px}
+      .hero-grid{gap:0}
       h1{font-size:clamp(52px,15vw,88px)}
       .hero-role{font-size:clamp(25px,8vw,38px)}
       .section{padding:92px 0}
       .section-title{font-size:clamp(54px,14vw,86px)}
-      .section-note{font-size:16px}
       .work-card{padding:24px}
       .timeline-brand{width:220px;min-height:160px}
-      .portrait-tag{left:0;bottom:-12px}
       .edu-card{min-height:280px;padding:26px}
       .skills-marquee{margin-bottom:34px;mask-image:linear-gradient(90deg,transparent,#000 4%,#000 96%,transparent);-webkit-mask-image:linear-gradient(90deg,transparent,#000 4%,#000 96%,transparent)}
       .skill-marquee-item{width:118px;flex-basis:118px;padding:7px 9px;gap:8px}
@@ -1300,7 +1273,6 @@
       .skill{min-height:auto}
       .contact-box{padding:32px 24px}
       .contact-title{font-size:clamp(58px,16vw,92px)}
-      .chat-panel{right:14px;bottom:82px;width:calc(100vw - 28px)}
       footer{align-items:flex-start;flex-direction:column}
     }
 
@@ -1308,8 +1280,12 @@
     @media (max-width:700px){
       html{scroll-padding-top:0}
 
+      /* A live blur behind a fixed header is costly on phones; a near-solid bar looks the same. */
       .nav{
         padding-top:max(0px, env(safe-area-inset-top));
+        background:rgba(246,244,238,.97);
+        backdrop-filter:none;
+        -webkit-backdrop-filter:none;
       }
       .nav-inner{
         width:calc(100% - 28px);
@@ -1395,7 +1371,7 @@
       }
       .hero-grid{
         grid-template-columns:1fr;
-        gap:34px;
+        gap:0;
         align-items:start;
       }
       h1{
@@ -1425,29 +1401,10 @@
         gap:8px;
         margin-top:13px;
       }
-      .portrait-wrap{display:none!important}
       .hero-link{
         min-height:46px;
         padding:9px 12px;
         font-size:12px;
-      }
-      .portrait-wrap{
-        justify-self:center;
-        width:min(290px,82vw);
-        margin-top:4px;
-      }
-      .portrait-wrap::before{
-        inset:-10px 18px 18px -10px;
-      }
-      .portrait-wrap::after{
-        inset:14px -14px -14px 14px;
-      }
-      .portrait-tag{
-        left:-2px;
-        bottom:-10px;
-        padding:9px 12px;
-        font-size:10px;
-        box-shadow:7px 7px 0 var(--yellow);
       }
 
       .section{

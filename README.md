@@ -3,12 +3,19 @@
 ## Public site files
 - `index.html` — page structure and content.
 - `styles.css` — responsive styling, navigation, animations, and assistant UI.
-- `main.js` — navigation, scrollspy, scroll progress, reveal motion, hero animation, and skills marquee.
+- `main.js` — navigation, scrollspy, scroll progress, reveal motion, skills marquee, and on-demand loading of the assistant (`data.js` + `chatbot.js` load after the page is idle or on first use).
+- `visitor-stats.js` — sends one row per visit to the "Portfolio Visitor" Google Form.
 - `data.js` — public CV data used to ground the assistant.
 - `chatbot.js` — browser-side AI client, link handling, local guardrails, and Cloudflare Worker requests.
 - `certification-icons/` — certification/provider images.
 - `skill-icons/` — skill/logo images.
-- `profile.jpeg` — profile image.
+
+## Visitor statistics
+`visitor-stats.js` sends one visit summary (device, browser, referrer, time spent, sections viewed, scroll depth, links clicked, chatbot use) to the `visit-stats` Cloudflare Worker when the visitor leaves or switches away from the tab. The Worker adds IP, country, city, and ISP from Cloudflare and records the row in the "Portfolio Visitor" Google Form. The form ID and field IDs live only in the Worker, never in this repository.
+
+- Visit the site once with `?notrack` to stop counting your own visits in that browser (`?track` turns it back on).
+- Visit with `?statsdebug` to print the summary in the browser console instead of sending it.
+- To use a different Worker, update `STATS_URL` at the top of `visitor-stats.js`.
 
 ## AI integration
 The portfolio does not contain a Fanar API key. The browser sends chat requests to:

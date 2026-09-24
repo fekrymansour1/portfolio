@@ -19,16 +19,19 @@ const CV_DATA = Object.freeze({
       institution: "Qatar University",
       country: "Qatar",
       degree: "Bachelor of Science in Computer Engineering",
+      years: "2022–2026",
       gpa: "3.6 / 4.0",
       deanList: "2023–2025",
-      secondaryDistinction: "Highest Academic Distinction in Qatar Secondary Education (99.75%)"
+      secondaryDistinction: "Graduated with Highest Academic Distinction in Qatar Secondary Education with a score of 99.75% in 2022"
     }
   ],
 
   experience: [
     {
       organization: "Qatar University",
+      location: "Doha, Qatar",
       title: "Instructor Assistant",
+      years: "2023–2026",
       details: [
         "Provide academic and technical support to undergraduate students in Python and Java programming courses, assisting in labs and practical sessions.",
         "Collaborate with faculty to deliver course materials, supervise hands-on activities, and improve student engagement.",
@@ -36,8 +39,20 @@ const CV_DATA = Object.freeze({
       ]
     },
     {
+      organization: "Qatar University",
+      location: "Doha, Qatar",
+      title: "Special Needs Support Assistant",
+      details: [
+        "Provided 250+ hours of academic support, attending classes to take and organize notes, transcribe lectures, and assist with course materials.",
+        "Used AI tools, shortcuts, and automation to accelerate notetaking, organize information, and simplify access to academic resources.",
+        "Created structured academic documents and materials while providing clear, patient communication and individualized support to students."
+      ]
+    },
+    {
       organization: "CamelCodeQA",
+      location: "Education City, Qatar",
       title: "Assistant Trainer",
+      years: "2024–2026",
       details: [
         "Delivered technology training programs for children covering AI, robotics, and game development fundamentals.",
         "Mentored 20+ students through hands-on programming projects, strengthening problem-solving and computational thinking skills.",
@@ -86,17 +101,17 @@ const CV_DATA = Object.freeze({
   },
 
   certifications: [
-    "Technical Support Fundamentals — Coursera",
-    "Claude 101 — Anthropic",
-    "Claude Code 101 — Anthropic",
-    "Claude Code in Action — Anthropic",
-    "Introduction to Model Context Protocol — Anthropic",
-    "AI Fluency: Framework & Foundations — Anthropic",
-    "CCNA Introduction to Networks — Cisco",
-    "Pricing Fundamentals — Dr. Ehab Muslim",
-    "SWOT Analysis — Dr. Ehab Muslim",
-    "Effective Sales Skills — Dr. Ehab Muslim",
-    "Google Digital Skills Program — Google Skills"
+    "Claude Code in Action — Anthropic (Aug 2026)",
+    "Introduction to Model Context Protocol — Anthropic (Aug 2026)",
+    "Claude Code 101 — Anthropic (Aug 2026)",
+    "AI Fluency: Framework & Foundations — Anthropic (Aug 2026)",
+    "Claude 101 — Anthropic (Aug 2026)",
+    "CCNA: Introduction to Networks — Cisco (Dec 2024)",
+    "Effective Sales Skills — Dr. Ehab Muslim (Apr 2021)",
+    "Technical Support Fundamentals — Coursera (Sep 2020)",
+    "SWOT Analysis — Dr. Ehab Muslim (Sep 2020)",
+    "Pricing Fundamentals — Dr. Ehab Muslim (Jul 2020)",
+    "Google Digital Skills Program — Google Skills (May 2020)"
   ]
 });
 
@@ -115,7 +130,7 @@ function buildCVContext() {
 
   for (const item of CV_DATA.education) {
     lines.push(`- ${item.institution}, ${item.country}`);
-    lines.push(`- ${item.degree}`);
+    lines.push(`- ${item.degree} (${item.years})`);
     lines.push(`- Grade: ${item.gpa} GPA`);
     lines.push(`- Dean’s List: ${item.deanList}`);
     lines.push(`- ${item.secondaryDistinction}`);
@@ -123,7 +138,8 @@ function buildCVContext() {
 
   lines.push("", "WORK EXPERIENCE");
   for (const item of CV_DATA.experience) {
-    lines.push(`${item.organization} — ${item.title}`);
+    const years = item.years ? ` (${item.years})` : "";
+    lines.push(`${item.organization}, ${item.location} — ${item.title}${years}`);
     item.details.forEach((detail) => lines.push(`- ${detail}`));
     lines.push("");
   }
