@@ -208,10 +208,8 @@ if (skillsMarquee && skillsTrack) {
       skillsTrack.style.animation = "skillsMarquee 30s linear infinite";
       const progress = Math.abs(normalized) / loop;
       skillsTrack.style.animationDelay = `${-Math.min(progress, 1) * 30}s`;
-      requestAnimationFrame(() => {
-        skillsTrack.style.animationPlayState = "";
-        skillsTrack.style.animationDelay = "";
-      });
+      // Keep the delay so the strip carries on from where it was released.
+      skillsTrack.style.animationPlayState = "";
     }
   };
 
