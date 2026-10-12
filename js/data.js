@@ -11,7 +11,7 @@ const CV_DATA = Object.freeze({
   bornIn: "Doha",
   email: "fekry.n.mansour@gmail.com",
   phone: "+974 5536 3197",
-  linkedin: "https://linkedin.com/in/fekrymansour1/",
+  linkedin: "https://www.linkedin.com/in/fekrymansour1/",
   github: "https://github.com/fekrymansour1",
 
   education: [
@@ -27,6 +27,17 @@ const CV_DATA = Object.freeze({
   ],
 
   experience: [
+    {
+      organization: "Primary Health Care Corporation (PHCC)",
+      location: "Al Sadd, Qatar",
+      title: "ICT Intern, ICT Department",
+      years: "2026",
+      details: [
+        "Rotated across five ICT sections: Network, Systems, Cybersecurity, Database, and Applications.",
+        "Assisted with network troubleshooting, system administration, user accounts, and hardware/software support.",
+        "Gained exposure to cybersecurity practices, access control, database management, and enterprise applications."
+      ]
+    },
     {
       organization: "Qatar University",
       location: "Doha, Qatar",
@@ -63,6 +74,23 @@ const CV_DATA = Object.freeze({
 
   projects: [
     {
+      title: "AI Companion for Dementia Patients (Senior Project)",
+      details: [
+        "Building an offline bilingual (Arabic/English) AI voice companion on NVIDIA Jetson AGX Orin that talks with dementia patients about their family photos.",
+        "Architected a real-time speech pipeline integrating speech-to-text, local LLMs, and text-to-speech, streaming replies sentence by sentence for natural, low-latency conversations.",
+        "Optimized inference for all three models using GGUF quantization and CUDA acceleration, achieving 13x faster speech generation on edge hardware.",
+        "Developed photo understanding with vision-language and face recognition models, and implemented AI guardrails grounding answers in family data to reduce hallucinations."
+      ]
+    },
+    {
+      title: "AI-Powered Developer Portfolio",
+      details: [
+        "Engineered and deployed a production-ready AI portfolio platform on GitHub Pages, integrating Fanar API, Qatar's large language model (LLM), an agent-based CV assistant, serverless infrastructure, and visitor analytics.",
+        "Architected a secure, serverless AI backend using Cloudflare Workers, implementing AI guardrails and response validation to protect API credentials, restrict outputs to trusted CV data, mitigate hallucinations, and improve response reliability.",
+        "Built visitor and traffic-source analytics to measure user engagement and identify how visitors discover the platform."
+      ]
+    },
+    {
       title: "AI Workflow Automation Systems",
       details: [
         "Developed AI-driven automation systems for workflow orchestration using Python, n8n, and cross-platform integrations, enabling programmatic account management and Excel-based process automation.",
@@ -70,17 +98,11 @@ const CV_DATA = Object.freeze({
       ]
     },
     {
-      title: "Student Management System",
+      title: "Student & Shipment Management Systems",
       details: [
-        "Designed and implemented a Python-based system to manage student records, courses, and grades using structured and object-oriented data handling.",
-        "Developed persistent storage using Python file I/O and implemented data validation to ensure data integrity, consistency, and error handling."
-      ]
-    },
-    {
-      title: "Shipment Management System",
-      details: [
-        "Engineered Java-based shipment management functionalities, including updating shipment records, modifying shipping methods, and handling payment processing.",
-        "Developed reporting modules to generate actionable insights, supporting data-driven decision-making."
+        "Developed Python- and Java-based management systems for handling student records, courses, grades, shipment records, shipping methods, and payment processing.",
+        "Implemented persistent data storage, validation, and error handling to maintain data integrity and reliable system operations.",
+        "Developed reporting modules to generate actionable insights and support data-driven decision-making."
       ]
     },
     {
@@ -93,11 +115,11 @@ const CV_DATA = Object.freeze({
   ],
 
   skills: {
-    programming: ["Python", "JavaScript", "Java", "C", "HTML5", "CSS", "Bash"],
-    toolsAndFrameworks: ["Claude Code", "LangChain", "LlamaIndex (RAG)", "n8n", "Apple Shortcuts", "FastAPI", "Cisco Packet Tracer", "Docker", "Google Colab"],
+    programming: ["Python", "JavaScript", "Java", "C", "HTML5", "CSS", "Bash", "Assembly"],
+    toolsAndFrameworks: ["Claude Code", "LangChain", "LangGraph", "LlamaIndex (RAG)", "n8n", "Apple Shortcuts", "FastAPI", "REST APIs", "MCP (Model Context Protocol)", "Docker", "Google Colab", "Cisco Packet Tracer", "Git", "GitHub", "Cloudflare", "Fanar API", "Hugging Face", "Ollama", "vLLM", "llama.cpp", "Speech-to-Text (Whisper, Cohere Transcribe)", "Model Quantization (GGUF)", "AI Agents"],
     hardwareAndIoT: ["Raspberry Pi", "Arduino", "NVIDIA Jetson AGX Orin Developer Kit", "ESP32", "Embedded Systems", "Microcontrollers", "Sensors & Actuators", "IoT Protocols"],
     operatingSystems: ["Ubuntu OS", "macOS", "Windows", "Raspberry Pi OS"],
-    other: ["Fast typing", "Microsoft Office (Advanced)", "Video Editing", "Photoshop", "AI Agents", "Odoo"]
+    other: ["Fast Typing", "Microsoft Office (Advanced)", "Video Editing", "Photoshop", "Odoo"]
   },
 
   cvDownload: "The full CV (PDF) can be downloaded with the Download CV button at the top of the portfolio.",

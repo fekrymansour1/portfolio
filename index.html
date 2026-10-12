@@ -16,7 +16,7 @@
 
 <body>
   <!-- Inline SVG icon set -->
-  <!-- Portfolio version 43 -->
+  <!-- Portfolio version 45 -->
   <svg width="0" height="0" style="position:absolute" aria-hidden="true">
     <symbol id="icon-mail" viewBox="0 0 24 24">
       <path d="M3.2 5h17.6c.66 0 1.2.54 1.2 1.2v11.6c0 .66-.54 1.2-1.2 1.2H3.2c-.66 0-1.2-.54-1.2-1.2V6.2C2 5.54 2.54 5 3.2 5Zm1.1 2.2L12 12.5l7.7-5.3H4.3Zm15.3 9.6V9.9L12.7 15a1.2 1.2 0 0 1-1.4 0L4.4 9.9v6.9h15.2Z"></path>
@@ -142,7 +142,7 @@
             <a class="hero-btn hero-btn-primary hero-btn-wide" href="documents/Fekry-Mansour-CV.pdf" download="Fekry-Mansour-CV.pdf">
               <svg><use href="#icon-download"></use></svg>Download CV
             </a>
-            <a class="hero-btn" href="https://linkedin.com/in/fekrymansour1/" target="_blank" rel="noreferrer">
+            <a class="hero-btn" href="https://www.linkedin.com/in/fekrymansour1/" target="_blank" rel="noreferrer">
               <svg><use href="#icon-linkedin"></use></svg>LinkedIn
             </a>
             <a class="hero-btn" href="#contact">
@@ -211,6 +211,47 @@
         <div class="work-grid stagger">
           <article class="work-card reveal">
             <div>
+              <h3 class="work-title">AI Companion for Dementia Patients</h3>
+              <p class="work-copy">
+                Senior project: an offline, bilingual (Arabic/English) AI voice companion on NVIDIA Jetson AGX Orin that
+                talks with dementia patients about their family photos. A real-time pipeline streams speech-to-text, a
+                local LLM, and text-to-speech sentence by sentence; GGUF quantization and CUDA made speech generation 13x
+                faster on the edge. Vision-language and face recognition models understand the photos, and guardrails
+                ground answers in family data to reduce hallucinations.
+              </p>
+            </div>
+            <div class="work-side">
+              <div class="pill-row">
+                <span class="pill">Jetson AGX Orin</span>
+                <span class="pill">Local LLM</span>
+                <span class="pill">Speech AI</span>
+                <span class="pill">GGUF + CUDA</span>
+                <span class="pill">Arabic / English</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="work-card reveal">
+            <div>
+              <h3 class="work-title">AI-Powered Developer Portfolio</h3>
+              <p class="work-copy">
+                Built and deployed this portfolio on GitHub Pages with an agent-based CV assistant powered by Fanar,
+                Qatar's LLM. A serverless Cloudflare Workers backend protects the API credentials and applies guardrails
+                that keep answers grounded in trusted CV data, alongside visitor and traffic-source analytics.
+              </p>
+            </div>
+            <div class="work-side">
+              <div class="pill-row">
+                <span class="pill">Fanar LLM</span>
+                <span class="pill">Cloudflare Workers</span>
+                <span class="pill">AI Guardrails</span>
+                <span class="pill">Analytics</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="work-card reveal">
+            <div>
               <h3 class="work-title">AI Workflow Automation Systems</h3>
               <p class="work-copy">
                 Developed AI-driven automation systems using Python, n8n, and cross-platform integrations,
@@ -231,34 +272,18 @@
 
           <article class="work-card reveal">
             <div>
-              <h3 class="work-title">Student Management System</h3>
+              <h3 class="work-title">Student &amp; Shipment Management Systems</h3>
               <p class="work-copy">
-                A Python-based system for managing student records, courses, and grades, using structured and
-                object-oriented data handling, persistent file storage, validation, consistency checks, and error handling.
+                Python- and Java-based management systems for student records, courses, grades, shipment records,
+                shipping methods, and payment processing, with persistent storage, validation, error handling, and
+                reporting modules that support data-driven decision-making.
               </p>
             </div>
             <div class="work-side">
               <div class="pill-row">
                 <span class="pill">Python</span>
-                <span class="pill">OOP</span>
-                <span class="pill">File I/O</span>
-                <span class="pill">Validation</span>
-              </div>
-            </div>
-          </article>
-
-          <article class="work-card reveal">
-            <div>
-              <h3 class="work-title">Shipment Management System</h3>
-              <p class="work-copy">
-                Engineered Java-based shipment management functionality for record updates, shipping-method changes,
-                payment processing, and reporting modules that support data-driven decision-making.
-              </p>
-            </div>
-            <div class="work-side">
-              <div class="pill-row">
                 <span class="pill">Java</span>
-                <span class="pill">Data handling</span>
+                <span class="pill">Validation</span>
                 <span class="pill">Reporting</span>
               </div>
             </div>
@@ -294,6 +319,32 @@
         </div>
 
         <div class="timeline">
+          <article class="timeline-item reveal">
+            <div>
+              <div class="timeline-brand" title="Primary Health Care Corporation">
+                <img
+                  src="images/logos/phcc-logo.png"
+                  alt="Primary Health Care Corporation logo"
+                  width="965"
+                  height="108"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
+            </div>
+
+            <div>
+              <h3 class="timeline-title"><a href="https://www.phcc.gov.qa/" target="_blank" rel="noreferrer">ICT Intern<span class="title-link-arrow" aria-hidden="true">↗</span></a></h3>
+              <div class="timeline-org">Primary Health Care Corporation (PHCC) · Al Sadd, Qatar · ICT Department</div>
+              <span class="timeline-date">2026</span>
+              <ul class="timeline-list">
+                <li>Rotated across five ICT sections: Network, Systems, Cybersecurity, Database, and Applications.</li>
+                <li>Assisted with network troubleshooting, system administration, user accounts, and hardware/software support.</li>
+                <li>Gained exposure to cybersecurity practices, access control, database management, and enterprise applications.</li>
+              </ul>
+            </div>
+          </article>
+
           <article class="timeline-item reveal">
             <div>
               <div class="timeline-brand" title="Qatar University">
@@ -395,6 +446,7 @@
           <div class="skills-marquee-track" id="skillsMarqueeTrack">
             <div class="skill-marquee-set">
               <!-- AI / LLM stack -->
+              <div class="skill-marquee-item"><div class="skill-marquee-icon"><img src="images/skills/fanar.png" alt="Fanar logo" width="25" height="54" loading="lazy" decoding="async" /></div><span class="skill-marquee-name">Fanar</span></div>
               <div class="skill-marquee-item"><div class="skill-marquee-icon"><img src="images/certifications/claude-icon.png" alt="Claude logo" width="54" height="54" loading="lazy" decoding="async" /></div><span class="skill-marquee-name">Claude</span></div>
               <div class="skill-marquee-item"><div class="skill-marquee-icon"><img src="images/skills/ollama.png" alt="Ollama logo" width="54" height="54" loading="lazy" decoding="async" /></div><span class="skill-marquee-name">Ollama</span></div>
               <div class="skill-marquee-item"><div class="skill-marquee-icon"><img src="images/skills/vllm.png" alt="vLLM logo" width="54" height="54" loading="lazy" decoding="async" /></div><span class="skill-marquee-name">vLLM</span></div>
@@ -414,6 +466,7 @@
             </div>
             <div class="skill-marquee-set" aria-hidden="true">
               <!-- AI / LLM stack -->
+              <div class="skill-marquee-item"><div class="skill-marquee-icon"><img src="images/skills/fanar.png" alt="" width="25" height="54" loading="lazy" decoding="async" /></div><span class="skill-marquee-name">Fanar</span></div>
               <div class="skill-marquee-item"><div class="skill-marquee-icon"><img src="images/certifications/claude-icon.png" alt="" width="54" height="54" loading="lazy" decoding="async" /></div><span class="skill-marquee-name">Claude</span></div>
               <div class="skill-marquee-item"><div class="skill-marquee-icon"><img src="images/skills/ollama.png" alt="" width="54" height="54" loading="lazy" decoding="async" /></div><span class="skill-marquee-name">Ollama</span></div>
               <div class="skill-marquee-item"><div class="skill-marquee-icon"><img src="images/skills/vllm.png" alt="" width="54" height="54" loading="lazy" decoding="async" /></div><span class="skill-marquee-name">vLLM</span></div>
@@ -437,11 +490,11 @@
         <div class="skills stagger">
           <div class="skill reveal">
             <strong>Programming</strong>
-            <span>Python, JavaScript, Java, C, HTML5, CSS, Bash</span>
+            <span>Python, JavaScript, Java, C, HTML5, CSS, Bash, Assembly</span>
           </div>
           <div class="skill reveal">
             <strong>Tools &amp; Frameworks</strong>
-            <span>Claude Code, LangChain, LlamaIndex (RAG), n8n, Apple Shortcuts, FastAPI, Cisco Packet Tracer, Docker, Google Colab</span>
+            <span>Claude Code, LangChain, LangGraph, LlamaIndex (RAG), n8n, Apple Shortcuts, FastAPI, REST APIs, MCP (Model Context Protocol), Docker, Google Colab, Cisco Packet Tracer, Git, GitHub, Cloudflare, Fanar API, Hugging Face, Ollama, vLLM, llama.cpp, speech-to-text (Whisper, Cohere Transcribe), model quantization (GGUF), AI agents</span>
           </div>
           <div class="skill reveal">
             <strong>Hardware &amp; IoT</strong>
@@ -453,7 +506,7 @@
           </div>
           <div class="skill reveal">
             <strong>Other Skills</strong>
-            <span>Fast typing, Microsoft Office (Advanced), video editing, Photoshop, AI agents, Odoo</span>
+            <span>Fast typing, Microsoft Office (Advanced), video editing, Photoshop, Odoo</span>
           </div>
         </div>
       </div>
@@ -468,25 +521,25 @@
         </div>
 
         <div class="certs stagger">
-          <a class="cert reveal" href="https://qucloud-my.sharepoint.com/:b:/g/personal/fm2208253_qu_edu_qa/IQBnVOpoIm7uRpyS-tjMTIqsAYe9DfH58YvJComjgWqMKWQ?e=7fcp3c" target="_blank" rel="noreferrer">
+          <a class="cert reveal" href="https://academy.langchain.com/certificates/givfezixuz" target="_blank" rel="noreferrer">
             <span class="cert-provider cert-provider-image cert-provider-dark" aria-hidden="true"><img src="images/certifications/langchain-icon.png" alt="" width="32" height="32" loading="lazy" decoding="async"></span><span class="cert-title">Foundation: Introduction to Deep Agents — LangChain<span class="cert-date">Issued Oct 2026</span></span><span class="cert-arrow">↗</span>
           </a>
           <a class="cert reveal" href="https://qucloud-my.sharepoint.com/:b:/g/personal/fm2208253_qu_edu_qa/IQBSr5-f5nYiTb-F4PJHJSd3AX-t_zHuTeWlmcLtWaqvSJE?e=YLXtxw" target="_blank" rel="noreferrer">
             <span class="cert-provider cert-provider-image" aria-hidden="true"><img src="images/certifications/oracle-icon.png" alt="" width="32" height="32" loading="lazy" decoding="async"></span><span class="cert-title">Oracle AI — Oracle, Meeza Academy<span class="cert-date">Issued Sep 2026</span></span><span class="cert-arrow">↗</span>
           </a>
-          <a class="cert reveal" href="https://qucloud-my.sharepoint.com/:b:/g/personal/fm2208253_qu_edu_qa/IQB6L7N4NcpNRrmlaDKxAcgjARMs1sNiyL0Jr2_nhtwzjSs?e=g4adeJ" target="_blank" rel="noreferrer">
+          <a class="cert reveal" href="https://verify.skilljar.com/c/g9a5phenv2uj" target="_blank" rel="noreferrer">
             <span class="cert-provider cert-provider-image" aria-hidden="true"><img src="images/certifications/claude-icon.png" alt="" width="32" height="32" loading="lazy" decoding="async"></span><span class="cert-title">Claude Code in Action — Anthropic<span class="cert-date">Issued Aug 2026</span></span><span class="cert-arrow">↗</span>
           </a>
-          <a class="cert reveal" href="https://qucloud-my.sharepoint.com/:b:/g/personal/fm2208253_qu_edu_qa/IQCBAJtUqiZwSolrI1I_FrojAejjJ1O9dO6pNGt73l4EbO0?e=OnKpRd" target="_blank" rel="noreferrer">
+          <a class="cert reveal" href="https://verify.skilljar.com/c/a5suji8mhf4k" target="_blank" rel="noreferrer">
             <span class="cert-provider cert-provider-image" aria-hidden="true"><img src="images/certifications/claude-icon.png" alt="" width="32" height="32" loading="lazy" decoding="async"></span><span class="cert-title">Introduction to Model Context Protocol — Anthropic<span class="cert-date">Issued Aug 2026</span></span><span class="cert-arrow">↗</span>
           </a>
-          <a class="cert reveal" href="https://qucloud-my.sharepoint.com/:b:/g/personal/fm2208253_qu_edu_qa/IQB4r2pp7K03QrRFZCqIJvwDAdEwFG9hD5Xsw85_kGug4dA?e=QTJBUX" target="_blank" rel="noreferrer">
+          <a class="cert reveal" href="https://verify.skilljar.com/c/237odo7y8qgy" target="_blank" rel="noreferrer">
             <span class="cert-provider cert-provider-image" aria-hidden="true"><img src="images/certifications/claude-icon.png" alt="" width="32" height="32" loading="lazy" decoding="async"></span><span class="cert-title">Claude Code 101 — Anthropic<span class="cert-date">Issued Aug 2026</span></span><span class="cert-arrow">↗</span>
           </a>
-          <a class="cert reveal" href="https://qucloud-my.sharepoint.com/:b:/g/personal/fm2208253_qu_edu_qa/IQCGw_pCoHuoQZtBpTr2Sh8sASEV7M08ByPvZUcd6UiGeF8?e=jSMRMS" target="_blank" rel="noreferrer">
+          <a class="cert reveal" href="https://verify.skilljar.com/c/pq4ystc8wrth" target="_blank" rel="noreferrer">
             <span class="cert-provider cert-provider-image" aria-hidden="true"><img src="images/certifications/claude-icon.png" alt="" width="32" height="32" loading="lazy" decoding="async"></span><span class="cert-title">AI Fluency: Framework &amp; Foundations — Anthropic<span class="cert-date">Issued Aug 2026</span></span><span class="cert-arrow">↗</span>
           </a>
-          <a class="cert reveal" href="https://qucloud-my.sharepoint.com/:b:/g/personal/fm2208253_qu_edu_qa/IQB6rjENveLQTq1uLPNKoXX7AWnYC4oWEUtZix1P6DF_TP8?e=rYaPNw" target="_blank" rel="noreferrer">
+          <a class="cert reveal" href="https://verify.skilljar.com/c/v9v2spjteq6h" target="_blank" rel="noreferrer">
             <span class="cert-provider cert-provider-image" aria-hidden="true"><img src="images/certifications/claude-icon.png" alt="" width="32" height="32" loading="lazy" decoding="async"></span><span class="cert-title">Claude 101 — Anthropic<span class="cert-date">Issued Aug 2026</span></span><span class="cert-arrow">↗</span>
           </a>
           <a class="cert reveal" href="https://qucloud-my.sharepoint.com/:b:/g/personal/fm2208253_qu_edu_qa/IQCKLmZg98h3RZMFhntouMQ7ARe-5JLcDTrp7l3ZqMyUEUU?e=g2Ejaj" target="_blank" rel="noreferrer">
@@ -537,7 +590,7 @@
               <svg class="contact-icon-phone"><use href="#icon-phone-minimal"></use></svg>
               +974 5536 3197
             </a>
-            <a href="https://linkedin.com/in/fekrymansour1/" target="_blank" rel="noreferrer" aria-label="LinkedIn profile">
+            <a href="https://www.linkedin.com/in/fekrymansour1/" target="_blank" rel="noreferrer" aria-label="LinkedIn profile">
               <svg class="contact-icon-linkedin"><use href="#icon-linkedin-minimal"></use></svg>
               linkedin.com/in/fekrymansour1/ ↗
             </a>
