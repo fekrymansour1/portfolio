@@ -22,7 +22,8 @@ const CV_DATA = Object.freeze({
       years: "2022–2026",
       gpa: "3.6 / 4.0",
       deanList: "2023–2025",
-      secondaryDistinction: "Graduated with Highest Academic Distinction in Qatar Secondary Education with a score of 99.75% in 2022"
+      secondaryDistinction: "Graduated with Highest Academic Distinction in Qatar Secondary Education with a score of 99.75% in 2022",
+      secondaryDistinctionLink: "https://x.com/Qatar_Edu/status/1538938564263673858?s=20"
     }
   ],
 
@@ -74,20 +75,31 @@ const CV_DATA = Object.freeze({
 
   projects: [
     {
+      title: "Qullege, an AI Assistant for Qatar University Students (qullege.com)",
+      link: "https://qullege.com/",
+      details: [
+        "Launched a bilingual Arabic/English AI assistant serving 250+ students, powered by Fanar API, Qatar's large language model, to answer questions about courses, class sections, instructors, deadlines, fees, university policies, and campus locations.",
+        "Designed a multi-agent architecture comprising a guard agent, central routing agent, specialist agents, and fact-checking agent. An MCP tool server connects the system to live Banner class searches, academic calendars, the course catalog, campus maps, and web search, grounding responses in official Qatar University sources.",
+        "Created bilingual course and instructor name-matching algorithms that handle abbreviations, typos, and Arabic spelling variations, achieving 99.7% accuracy across 1,240 course titles and 100% accuracy on full instructor names for the semester.",
+        "Deployed the platform on Oracle Cloud with Caddy-managed HTTPS, server-side API key protection, a restricted admin panel, and rate limiting. Added a visitor analytics dashboard featuring heatmaps and session replay to analyze engagement and user behavior."
+      ]
+    },
+    {
       title: "AI Companion for Dementia Patients (Senior Project)",
       details: [
-        "Building an offline bilingual (Arabic/English) AI voice companion on NVIDIA Jetson AGX Orin that talks with dementia patients about their family photos.",
-        "Architected a real-time speech pipeline integrating speech-to-text, local LLMs, and text-to-speech, streaming replies sentence by sentence for natural, low-latency conversations.",
-        "Optimized inference for all three models using GGUF quantization and CUDA acceleration, achieving 13x faster speech generation on edge hardware.",
-        "Developed photo understanding with vision-language and face recognition models, and implemented AI guardrails grounding answers in family data to reduce hallucinations."
+        "Developing an offline, bilingual Arabic/English voice companion on NVIDIA Jetson AGX Orin that uses family photos to support natural conversations with dementia patients.",
+        "Integrated speech-to-text, local LLMs, and text-to-speech into a real-time speech pipeline, streaming responses sentence by sentence to reduce latency and maintain conversational flow.",
+        "Accelerated inference across all three models through GGUF quantization and CUDA optimization, achieving 13x faster speech generation on edge hardware.",
+        "Combined vision-language and face recognition models for photo understanding, with AI guardrails that ground responses in family data to reduce hallucinations."
       ]
     },
     {
       title: "AI-Powered Developer Portfolio",
+      link: "https://fekrymansour1.github.io/portfolio/",
       details: [
-        "Engineered and deployed a production-ready AI portfolio platform on GitHub Pages, integrating Fanar API, Qatar's large language model (LLM), an agent-based CV assistant, serverless infrastructure, and visitor analytics.",
-        "Architected a secure, serverless AI backend using Cloudflare Workers, implementing AI guardrails and response validation to protect API credentials, restrict outputs to trusted CV data, mitigate hallucinations, and improve response reliability.",
-        "Built visitor and traffic-source analytics to measure user engagement and identify how visitors discover the platform."
+        "Launched a production-ready AI portfolio platform on GitHub Pages, featuring a Fanar-powered, agent-based CV assistant that answers visitors' questions about professional experience, skills, and projects.",
+        "Implemented a secure serverless backend with Cloudflare Workers, using AI guardrails and response validation to protect API credentials, constrain answers to trusted CV data, and mitigate hallucinations.",
+        "Integrated visitor and traffic-source analytics to measure engagement and identify the channels driving traffic to the portfolio."
       ]
     },
     {
@@ -95,14 +107,6 @@ const CV_DATA = Object.freeze({
       details: [
         "Developed AI-driven automation systems for workflow orchestration using Python, n8n, and cross-platform integrations, enabling programmatic account management and Excel-based process automation.",
         "Built AI-powered chatbots using LangChain and RAG with Supabase for data storage and vector search, enabling intelligent retrieval of company-specific knowledge and automated internal support."
-      ]
-    },
-    {
-      title: "Student & Shipment Management Systems",
-      details: [
-        "Developed Python- and Java-based management systems for handling student records, courses, grades, shipment records, shipping methods, and payment processing.",
-        "Implemented persistent data storage, validation, and error handling to maintain data integrity and reliable system operations.",
-        "Developed reporting modules to generate actionable insights and support data-driven decision-making."
       ]
     },
     {
@@ -116,7 +120,9 @@ const CV_DATA = Object.freeze({
 
   skills: {
     programming: ["Python", "JavaScript", "Java", "C", "HTML5", "CSS", "Bash", "Assembly"],
-    toolsAndFrameworks: ["Claude Code", "LangChain", "LangGraph", "LlamaIndex (RAG)", "n8n", "Apple Shortcuts", "FastAPI", "REST APIs", "MCP (Model Context Protocol)", "Docker", "Google Colab", "Cisco Packet Tracer", "Git", "GitHub", "Cloudflare", "Fanar API", "Hugging Face", "Ollama", "vLLM", "llama.cpp", "Speech-to-Text (Whisper, Cohere Transcribe)", "Model Quantization (GGUF)", "AI Agents"],
+    aiToolsAndFrameworks: ["Claude Code", "LangChain", "LangGraph", "LlamaIndex (RAG)", "AI Agents", "MCP (Model Context Protocol)", "Fanar API", "Hugging Face", "Google Colab", "PyTorch", "TensorFlow", "Scikit-learn", "Ollama", "vLLM", "llama.cpp", "Model Quantization (GGUF)", "Speech-to-Text (Whisper, Cohere Transcribe)"],
+    developmentTools: ["FastAPI", "REST APIs", "Docker", "Cloudflare", "n8n", "Apple Shortcuts", "Git", "GitHub", "Cisco Packet Tracer"],
+    cloudPlatforms: ["Google Cloud Platform (GCP)", "Microsoft Azure AI", "DigitalOcean", "Hostinger"],
     hardwareAndIoT: ["Raspberry Pi", "Arduino", "NVIDIA Jetson AGX Orin Developer Kit", "ESP32", "Embedded Systems", "Microcontrollers", "Sensors & Actuators", "IoT Protocols"],
     operatingSystems: ["Ubuntu OS", "macOS", "Windows", "Raspberry Pi OS"],
     other: ["Fast Typing", "Microsoft Office (Advanced)", "Video Editing", "Photoshop", "Odoo"]
@@ -160,7 +166,7 @@ function buildCVContext() {
     lines.push(`- ${item.degree} (${item.years})`);
     lines.push(`- Grade: ${item.gpa} GPA`);
     lines.push(`- Dean’s List: ${item.deanList}`);
-    lines.push(`- ${item.secondaryDistinction}`);
+    lines.push(`- ${item.secondaryDistinction} (announcement: ${item.secondaryDistinctionLink})`);
   }
 
   lines.push("", "WORK EXPERIENCE");
@@ -173,14 +179,16 @@ function buildCVContext() {
 
   lines.push("PROJECTS");
   for (const project of CV_DATA.projects) {
-    lines.push(project.title);
+    lines.push(project.link ? `${project.title} — ${project.link}` : project.title);
     project.details.forEach((detail) => lines.push(`- ${detail}`));
     lines.push("");
   }
 
   lines.push("SKILLS");
   lines.push(`- Programming: ${CV_DATA.skills.programming.join(", ")}`);
-  lines.push(`- Tools & Frameworks: ${CV_DATA.skills.toolsAndFrameworks.join(", ")}`);
+  lines.push(`- AI Tools & Frameworks: ${CV_DATA.skills.aiToolsAndFrameworks.join(", ")}`);
+  lines.push(`- Development Tools & Technologies: ${CV_DATA.skills.developmentTools.join(", ")}`);
+  lines.push(`- Cloud Platforms & AI Services: ${CV_DATA.skills.cloudPlatforms.join(", ")}`);
   lines.push(`- Hardware & IoT: ${CV_DATA.skills.hardwareAndIoT.join(", ")}`);
   lines.push(`- Operating Systems: ${CV_DATA.skills.operatingSystems.join(", ")}`);
   lines.push(`- Other Skills: ${CV_DATA.skills.other.join(", ")}`);

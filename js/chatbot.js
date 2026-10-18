@@ -174,7 +174,27 @@ const PORTFOLIO_TERMS = [
   /\bsupabase\b/i,
   /\bdocker\b/i,
   /\bcisco\b/i,
-  /\bgoogle\s+colab\b/i
+  /\bgoogle\s+colab\b/i,
+  /\bqullege\b/i,
+  /\bbanner\b/i,
+  /\bmulti-?agents?\b/i,
+  /\bagents?\b/i,
+  /\bcaddy\b/i,
+  /\bcloud\b/i,
+  /\bgcp\b/i,
+  /\bazure\b/i,
+  /\bdigital\s*ocean\b/i,
+  /\bhostinger\b/i,
+  /\bdeploy(ed|ment)?\b/i,
+  /\bheatmaps?\b/i,
+  /\bfastapi\b/i,
+  /\bpytorch\b/i,
+  /\btensorflow\b/i,
+  /\bscikit-?learn\b/i,
+  /\blla?ma\s*index\b/i,
+  /\besp32\b/i,
+  /\bvision\b/i,
+  /\bface\s+recognition\b/i
 ];
 
 const RESPONSE_LEAK_PATTERNS = [

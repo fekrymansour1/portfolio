@@ -539,14 +539,19 @@
       line-height:1;
       letter-spacing:-.048em;
     }
-    .timeline-title a{
+    .timeline-title a,
+    .work-title a,
+    .edu-title a{
+      color:inherit;
       text-decoration:underline;
       text-decoration-color:transparent;
       text-decoration-thickness:2px;
       text-underline-offset:5px;
       transition:text-decoration-color .2s ease;
     }
-    .timeline-title a:hover{text-decoration-color:var(--blue)}
+    .timeline-title a:hover,
+    .work-title a:hover,
+    .edu-title a:hover{text-decoration-color:var(--blue)}
     /* Same ↗ mark as the certificate cards, scaled to the title text. */
     .title-link-arrow{
       display:inline-block;
@@ -558,7 +563,9 @@
       vertical-align:.24em;
       transition:transform .2s ease;
     }
-    .timeline-title a:hover .title-link-arrow{transform:translate(2px,-2px)}
+    .timeline-title a:hover .title-link-arrow,
+    .work-title a:hover .title-link-arrow,
+    .edu-title a:hover .title-link-arrow{transform:translate(2px,-2px)}
     .timeline-org{
       margin-bottom:14px;
       color:var(--blue);
